@@ -2,17 +2,30 @@
   "manifest_version": 2,
   "name": "BTTV for VKontakte",
   "version": "1.0",
-  "default_locale": "en",
-  "description": "This extension is an adaptation of BTTV for vk",
+  "description": "This is an unrelated version of BTTV for VKontakte",
   "icons": {
-
+    "64": "icons/64px.png",
+    "128": "icons/128px.png",
+    "512": "icons/512px.png"
   },
   "page_action": {
     "default_icon": {
-
+      "64": "icons/64px.png",
+      "128": "icons/128px.png",
+      "512": "icons/512px.png"
     },
     "default_title": "BTTV for VKontakte",
-    "default_popup": 
+    "default_popup": "popup/popup.html"
   },
-  "permissions": ["*://*.vk.com/*"]
+  "content_scripts": [{
+    "matches": ["*://*.vk.com/*"],
+    "css": ["bttv_for_vk.css"],
+    "js": ["runup.js"]
+  }],
+  "permissions": [
+    "*://*.vk.com/*",
+    "storage",
+    "activeTab"
+  ],
+  "web_accessible_resources": ["bttv_for_vk.js"]
 }

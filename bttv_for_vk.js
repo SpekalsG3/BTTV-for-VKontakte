@@ -332,23 +332,10 @@ bttvForVKNS.emotesMenu = bttvForVKNS.createElement("div", {className:"bttv_emote
   bttvForVKNS.createElement("div", {className:"bttv_emotes-scrollable"},[bttvForVKNS.emoteScrollable]),
   bttvForVKNS.createElement("div", {className:"bttv_emotes-scrollarea"},[bttvForVKNS.scrollbar]),
 ]);
-bttvForVKNS.emotesMenuSizes = {
-  height: bttvForVKNS.emotesMenu.clientHeight,
-  width: bttvForVKNS.emotesMenu.clientWidth
-};
 bttvForVKNS.scrollHeight = bttvForVKNS.emoteScrollable.scrollHeight;
-bttvForVKNS.scrollareaHeight = bttvForVKNS.emotesMenuSizes.height;
-bttvForVKNS.scrollSpace = bttvForVKNS.scrollHeight-bttvForVKNS.scrollareaHeight;
 bttvForVKNS.emoteButtonWrapper = bttvForVKNS.createElement("div", {"className": "bttv_emote-button-wrapper"}, [
   bttvForVKNS.createElement("div", {"className": "bttv_emote-button-image"})
 ]);
-
-// styles
-var style = bttvForVKNS.createElement('style', {
-  "type": 'text/css',
-  "innerHTML": '.bttv_msg-text {display:inline-block;}.bttv_img-wrapper {position:relative;display:inline-block;margin:0 2px;vertical-align:baseline;}.bttv_img-emote {vertical-align:middle;}.bttv_img-wrapper + .bttv_img-emote--overlay {margin-left:-30px;}.nim-dialog.nim-dialog_classic .nim-dialog--who + .nim-dialog--inner-text > .bttv_img-wrapper {height:14px;vertical-align:middle;top:-8px;}.bttv_emote-tooltip {position:absolute;z-index:2000;text-align:center;border-radius:2px;white-space:nowrap;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);padding:3px 6px;border-radius:2px;background:#fff;color:#0e0c13;top:auto;bottom:100%;margin-bottom:6px;display:none;font:13px Roobert,Helvetica Neue,Helvetica,Arial,sans-serif;}.bttv_emote-tooltip:after {position:absolute;content:"";bottom:-3px;left:-webkit-calc(50% - 3px);left:calc(50% - 3px);width:6px;height:6px;background:#fff;border-radius:0 0 2px;transform:rotateZ(45deg);}.bttv_emote-button-wrapper {padding: 6px 7px 6px 5px;}.bttv_emote-button-image {width: 24px;height: 24px;-webkit-filter: grayscale(100%);filter: grayscale(100%);cursor: pointer;background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOmNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDcuNSA0Ny41IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0Ny41IDQ3LjU7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB2ZXJzaW9uPSIxLjEiIGlkPSJzdmcyIj48bWV0YWRhdGEgaWQ9Im1ldGFkYXRhOCI+PHJkZjpSREY+PGNjOldvcmsgcmRmOmFib3V0PSIiPjxkYzpmb3JtYXQ+aW1hZ2Uvc3ZnK3htbDwvZGM6Zm9ybWF0PjxkYzp0eXBlIHJkZjpyZXNvdXJjZT0iaHR0cDovL3B1cmwub3JnL2RjL2RjbWl0eXBlL1N0aWxsSW1hZ2UiLz48L2NjOldvcms+PC9yZGY6UkRGPjwvbWV0YWRhdGE+PGRlZnMgaWQ9ImRlZnM2Ij48Y2xpcFBhdGggaWQ9ImNsaXBQYXRoMTYiIGNsaXBQYXRoVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBpZD0icGF0aDE4IiBkPSJNIDAsMzggMzgsMzggMzgsMCAwLDAgMCwzOCBaIi8+PC9jbGlwUGF0aD48L2RlZnM+PGcgdHJhbnNmb3JtPSJtYXRyaXgoMS4yNSwwLDAsLTEuMjUsMCw0Ny41KSIgaWQ9ImcxMCI+PGcgaWQ9ImcxMiI+PGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXBQYXRoMTYpIiBpZD0iZzE0Ij48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzNiwxOSkiIGlkPSJnMjAiPjxwYXRoIGlkPSJwYXRoMjIiIHN0eWxlPSJmaWxsOiNmZmNjNGQ7ZmlsbC1vcGFjaXR5OjE7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiIGQ9Im0gMCwwIGMgMCwtOS4zODkgLTcuNjExLC0xNyAtMTcsLTE3IC05LjM4OSwwIC0xNyw3LjYxMSAtMTcsMTcgMCw5LjM4OSA3LjYxMSwxNyAxNywxNyBDIC03LjYxMSwxNyAwLDkuMzg5IDAsMCIvPjwvZz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxOSwxNikiIGlkPSJnMjQiPjxwYXRoIGlkPSJwYXRoMjYiIHN0eWxlPSJmaWxsOiM2NjQ1MDA7ZmlsbC1vcGFjaXR5OjE7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiIGQ9Im0gMCwwIGMgLTMuNjIzLDAgLTYuMDI3LDAuNDIyIC05LDEgLTAuNjc5LDAuMTMxIC0yLDAgLTIsLTIgMCwtNCA0LjU5NSwtOSAxMSwtOSA2LjQwNCwwIDExLDUgMTEsOSBDIDExLDEgOS42NzksMS4xMzIgOSwxIDYuMDI3LDAuNDIyIDMuNjIzLDAgMCwwIi8+PC9nPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDExLDI0KSIgaWQ9ImcyOCI+PHBhdGggaWQ9InBhdGgzMCIgc3R5bGU9ImZpbGw6IzY2NDUwMDtmaWxsLW9wYWNpdHk6MTtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIgZD0iTSAwLDAgQyAwLDAgMCwyIDIsMiA0LDIgNCwwIDQsMCBsIDAsLTIgYyAwLDAgMCwtMiAtMiwtMiAtMiwwIC0yLDIgLTIsMiBsIDAsMiB6Ii8+PC9nPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIzLDI0KSIgaWQ9ImczMiI+PHBhdGggaWQ9InBhdGgzNCIgc3R5bGU9ImZpbGw6IzY2NDUwMDtmaWxsLW9wYWNpdHk6MTtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIgZD0iTSAwLDAgQyAwLDAgMCwyIDIsMiA0LDIgNCwwIDQsMCBsIDAsLTIgYyAwLDAgMCwtMiAtMiwtMiAtMiwwIC0yLDIgLTIsMiBsIDAsMiB6Ii8+PC9nPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwLDE1KSIgaWQ9ImczNiI+PHBhdGggaWQ9InBhdGgzOCIgc3R5bGU9ImZpbGw6I2ZmZmZmZjtmaWxsLW9wYWNpdHk6MTtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIgZD0ibSAwLDAgYyAwLDAgMywtMSA5LC0xIDYsMCA5LDEgOSwxIDAsMCAtMiwtNCAtOSwtNCAtNywwIC05LDQgLTksNCIvPjwvZz48L2c+PC9nPjwvZz48L3N2Zz4K) center no-repeat;background-size: 24px;-webkit-transition: .05s;transition: .05s;}.bttv_emote-button-image:hover {-webkit-filter: none;filter: none;}.bttv_emotes-menu {visibility: hidden;position: fixed;top: 0;left: 0;width: 323px;height: 500px;background-color: #202020;padding: 5px 11px 5px 5px;z-index: 10000;font: 13px Roobert,Helvetica Neue,Helvetica,Arial,sans-serif;overflow: hidden;}.bttv_emotes-scrollable {width: 100%;height: 100%;overflow: hidden;position: relative;}.bttv_emotes-scrollable--inner {position: absolute;top: 0;bottom: 0;left: 0;right: -30px;overflow-y: scroll;}.bttv_emotes-group--title {border-top: 1px solid #000;box-shadow: 0 1px 0 rgba(255,255,255,.05) inset;background-image: linear-gradient(to top,transparent,rgba(0,0,0,.5));padding: 2px;color: #ddd;text-align: center;position: relative;}.bttv_emotes-preview {vertical-align: baseline;display: inline-block;padding: 2px;margin: 1px;cursor: pointer;border-radius: 5px;text-align: center;position: relative;width: 30px;height: 30px;transition: all .25s ease;border: 1px solid transparent;box-sizing: border-box;}.bttv_emotes-preview:hover {background-color: rgba(255,255,255,.1);}.bttv_emotes-preview--image {max-width: 100%;max-height: 100%;margin: auto;position: absolute;top: 0;bottom: 0;left: 0;right: 0;box-sizing: border-box;}.bttv_emotes-scrollarea {position: absolute;right: 2px;top: 0;width: 7px;height: 100%;}.bttv_emotes-scrollbar {position: relative;width: 100%;top: 0;height: 100px;background-color: #6c6e71;opacity: .7;border-radius: 7px;-webkit-transition: .2s;transition: .2s;}.bttv_predicted-menu {max-height: 300px; display: none;position: absolute;left: 0;bottom: 100%;right: 100px;width: 100%;padding: 0;margin: 0;border-width: 1px;border-style: solid;border-color: rgb(197, 197, 197);border-image: initial;overflow-y: scroll;overflow-x: hidden;background-color: rgb(23, 20, 31);color: white;}.bttv_predicted-menuu::-webkit-scrollbar {display: none;}.bttv_predicted-item {line-height: 28px;height: 28px;cursor: pointer;padding: 3px 1em 3px 0.4em;}.bttv_predicted-item:hover {background-color: #8073a5;}.bttv_predicted-item img {float: right;}.bttv_predicted-error {position: absolute;width: 594px;bottom: 65px;z-index: -1;pointer-events: none;text-align: center;}.bttv_predcited-error--inner {text-align: center;font-size: 12.5px;color: var(--gray_500);overflow: hidden;display: inline-block;position: relative;opacity: 0; transition: opacity .2s ease-out;border-radius: 13px;padding: 3px 15px;line-height: 18px;background: var(--white);border: 1px solid var(--steel_gray_120);box-shadow: 0 1px 3px 0 var(--black_alpha12);}.im-chat-input .im-chat-input--textarea:not(.im-chat-input1_open-keyboard):not(.im-chat-input1_close-keyboard):not(.im-chat-input--textarea_show-templates) .im-chat-input--text {padding-right: 111px !important;}'
-});
-document.getElementsByTagName('head')[0].appendChild(style);
 
 for (var name in bttvForVKNS.bttv_emotes) {
   var emote = bttvForVKNS.bttv_emotes[name];
@@ -371,12 +358,6 @@ for (var name in bttvForVKNS.bttv_emotes) {
   else
     bttvForVKNS.emoteContainer[0].appendChild(emotePreview);
 }
-document.body.appendChild(bttvForVKNS.emotesMenu);
-
-bttvForVKNS.emotesMenu.style.display = "none";
-bttvForVKNS.emotesMenu.style.visibility = "visible";
-
-bttvForVKNS.scrollbar.style.height = bttvForVKNS.scrollareaHeight*bttvForVKNS.scrollareaHeight/bttvForVKNS.scrollHeight + "px";
 
 bttvForVKNS.emoteButtonWrapper.addEventListener("click", function() {
   if (bttvForVKNS.emotesMenuShown) {
@@ -460,146 +441,161 @@ window.addEventListener("click", function(e) {
     bttvForVKNS.predictedMenu.style.display = "none";
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-  var vk_se = window.se;
-  window.se = function(t) {
-    var i = document.createElement("div");
-    i.innerHTML = t;
-    try {
-      var name = i.firstElementChild.classList[0];
-      if (name == "nim-dialog" || name == "im-mess") {
-        var msgBody = i.firstElementChild.firstElementChild;
-        if (msgBody !== null)
-          bttvForVKNS.replaceEmotes(msgBody);
-        msgBody = i.firstElementChild.lastElementChild.firstElementChild;
-        if (msgBody !== null) {
-          msgBody = msgBody.children[5].firstElementChild;
-          if (msgBody.lastElementChild !== null && msgBody.lastElementChild.className == "nim-dialog--inner-text")
-            bttvForVKNS.replaceEmotes(msgBody.lastElementChild);
-          else
+if(document.readyState !== 'complete') {
+  window.addEventListener("load", function() {
+    document.body.appendChild(bttvForVKNS.emotesMenu);
+
+    bttvForVKNS.emotesMenuSizes = {
+      height: bttvForVKNS.emotesMenu.clientHeight,
+      width: bttvForVKNS.emotesMenu.clientWidth
+    };
+    bttvForVKNS.emotesMenu.style.display = "none";
+    // bttvForVKNS.emotesMenu.style.visibility = "visible";
+    bttvForVKNS.scrollareaHeight = bttvForVKNS.emotesMenuSizes.height;
+    bttvForVKNS.scrollSpace = bttvForVKNS.scrollHeight-bttvForVKNS.scrollareaHeight;
+    bttvForVKNS.scrollbar.style.height = bttvForVKNS.scrollareaHeight*bttvForVKNS.scrollareaHeight/bttvForVKNS.scrollHeight + "px";
+
+    bttvForVKNS.vk_se = window.se;
+    window.se = function(t) {
+      var i = document.createElement("div");
+      i.innerHTML = t;
+      try {
+        var name = i.firstElementChild.classList[0];
+        if (name == "nim-dialog" || name == "im-mess") {
+          var msgBody = i.firstElementChild.firstElementChild;
+          if (msgBody !== null)
             bttvForVKNS.replaceEmotes(msgBody);
-        }
-      }
-    } catch (e) {}
-    return vk_se(i.innerHTML);
-  }
-
-  var vk_sech = window.sech;
-  window.sech = function(t) {
-    var i = document.createElement("div");
-    i.innerHTML = t;
-    for (var el of i.getElementsByClassName("im-mess--text wall_module"))
-      bttvForVKNS.replaceEmotes(el);
-    return vk_sech(i.innerHTML);
-  }
-
-  var vk_val = window.val;
-  window.val = function(t) {
-    var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : void 0;
-    if (void 0 !== e && e != "" && t !== undefined) {
-      var i = document.createElement("div");
-      i.innerHTML = e;
-      // load new messages
-      if (i.children.length > 0 && (i.firstElementChild.classList[0] === "im-mess-stack" || i.firstElementChild.classList[0] === "im-page--history-new-bar")) { 
-        for (var el of i.getElementsByClassName("im-mess--text wall_module"))
-          bttvForVKNS.replaceEmotes(el);
-        arguments[1] = i.innerHTML;
-      }
-      else if (i.children.length > 1 && i.lastElementChild.className == "nim-dialog--inner-text") {
-        bttvForVKNS.replaceEmotes(i.children[1]);
-        arguments[1] = i.innerHTML;
-      }
-      // new sent message in dialog tab
-      else if (t.classList !== undefined && t.classList[0] == "nim-dialog--preview") {
-        bttvForVKNS.replaceEmotes(i);
-        arguments[1] = i.innerHTML;
-      }
-    }
-    return vk_val(...arguments);
-  }
-
-  // Attached reply
-  var vk_getTemplate = window.getTemplate;
-  window.getTemplate = function(t, e) {
-    if (t == "im_replied_message") {
-      var i = document.createElement("div");
-      for (var n of bttvForVKNS.parseEmotes(e.text))
-        i.appendChild(n);
-      e.text = i.innerHTML;
-    }
-    return vk_getTemplate(t, e);
-  }
-
-  if (document.getElementsByClassName("im-page-wrapper").length > 0)
-    bttv_visualizeEmotesOnPage();
-
-  // Starred and forwarded tab
-  var boxLayerObserver = new (window.MutationObserver || window.WebKitMutationObserver)(function(muts, o) {
-    try {
-      if (muts[1].addedNodes[0].className == "im_single_log_wrap") {
-        for (var el of muts[1].addedNodes[0].getElementsByClassName("im-mess--text wall_module"))
-          bttvForVKNS.replaceEmotes(el);
-      } else if (muts[0].addedNodes[0].classList[1] == "im-important-box") {
-        for (var el of muts[0].addedNodes[0].getElementsByClassName("im-mess--text wall_module"))
-          bttvForVKNS.replaceEmotes(el);
-      }
-    } catch (e) {}
-  });
-
-  boxLayerObserver.observe(document.getElementById("box_layer"), {
-    subtree: true,
-    attributes: false,
-    childList: true
-  });
-
-  var imObserver = new (window.MutationObserver || window.WebKitMutationObserver)(function(muts, o) {
-    try {
-      if (muts[0].target.id == "wrap3" && muts[0].addedNodes[0].id == "wrap2" && muts[0].addedNodes[0].firstElementChild.firstElementChild.firstElementChild.classList[0] == "im-page-wrapper")
-        bttv_visualizeEmotesOnPage();
-      else if (muts[1].target.id == "im_dialogs" && muts[1].addedNodes[0].classList[0] == "nim-dialog") {
-        var el;
-        for (var m of muts) {
-          if (m.addedNodes.length > 0) {
-            el = m.addedNodes[0].lastElementChild.firstElementChild.children[5].firstElementChild;
-            if (el.lastElementChild !== null && el.lastElementChild.className == "nim-dialog--inner-text")
-              bttvForVKNS.replaceEmotes(el.lastElementChild);
+          msgBody = i.firstElementChild.lastElementChild.firstElementChild;
+          if (msgBody !== null) {
+            msgBody = msgBody.children[5].firstElementChild;
+            if (msgBody.lastElementChild !== null && msgBody.lastElementChild.className == "nim-dialog--inner-text")
+              bttvForVKNS.replaceEmotes(msgBody.lastElementChild);
             else
-              bttvForVKNS.replaceEmotes(el);
+              bttvForVKNS.replaceEmotes(msgBody);
           }
         }
-      } else if (muts[0].target.classList[1] == "im-chat-input--fwd" && muts[0].addedNodes[1].classList[1] == "im-fwd_msg")
-        bttvForVKNS.replaceEmotes(muts[0].addedNodes[1].lastElementChild);
-      else if (muts[0].target.className.substr(0,13) == "_im_msg_reply") {
-        var container = muts[0].addedNodes[0].lastElementChild.lastElementChild;
-        var child = container.childNodes[0];
-        if (child.nodeName === "#text") {
-          for (var n of bttvForVKNS.parseEmotes(child.nodeValue))
-            container.insertBefore(n, child);
-          child.remove();
-        }
-      } else if (muts[0].target.className.substr(0,13) == "_im_msg_media") {
-        for (var el of muts[0].target.getElementsByClassName("im-mess--text wall_module"))
-          bttvForVKNS.replaceEmotes(el);
-      }
-    } catch (e) {}
-  });
-
-  imObserver.observe(document.getElementById("wrap3"), {
-    subtree: true,
-    attributes: false,
-    childList: true
-  });
-
-  window.addEventListener("mouseup", function(e) {
-    e.preventDefault();
-    bttvForVKNS.scrollbar.style.webkitTransition = ".2s";
-    bttvForVKNS.scrollbar.style.transition = ".2s";
-    bttvForVKNS.menuDraggingBar = false;
-  });
-  window.addEventListener("mousemove", function(e) {
-    if (bttvForVKNS.menuDraggingBar) {
-      bttvForVKNS.handleScrollBar(bttvForVKNS.menuScrollOffset+e.pageY-bttvForVKNS.menuStartDraggingPoint, true);
-      bttvForVKNS.menuStartDraggingPoint = e.pageY;
+      } catch (e) {}
+      return bttvForVKNS.vk_se(i.innerHTML);
     }
+
+    bttvForVKNS.vk_sech = window.sech;
+    window.sech = function(t) {
+      var i = document.createElement("div");
+      i.innerHTML = t;
+      for (var el of i.getElementsByClassName("im-mess--text wall_module"))
+        bttvForVKNS.replaceEmotes(el);
+      return bttvForVKNS.vk_sech(i.innerHTML);
+    }
+
+    bttvForVKNS.vk_val = window.val;
+    window.val = function(t) {
+      var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : void 0;
+      if (void 0 !== e && e != "" && t !== undefined) {
+        var i = document.createElement("div");
+        i.innerHTML = e;
+        // load new messages
+        if (i.children.length > 0 && (i.firstElementChild.classList[0] === "im-mess-stack" || i.firstElementChild.classList[0] === "im-page--history-new-bar")) { 
+          for (var el of i.getElementsByClassName("im-mess--text wall_module"))
+            bttvForVKNS.replaceEmotes(el);
+          arguments[1] = i.innerHTML;
+        }
+        else if (i.children.length > 1 && i.lastElementChild.className == "nim-dialog--inner-text") {
+          bttvForVKNS.replaceEmotes(i.children[1]);
+          arguments[1] = i.innerHTML;
+        }
+        // new sent message in dialog tab
+        else if (t.classList !== undefined && t.classList[0] == "nim-dialog--preview") {
+          bttvForVKNS.replaceEmotes(i);
+          arguments[1] = i.innerHTML;
+        }
+      }
+      return bttvForVKNS.vk_val(...arguments);
+    }
+
+    // Attached reply
+    bttvForVKNS.vk_getTemplate = window.getTemplate;
+    window.getTemplate = function(t, e) {
+      if (t == "im_replied_message") {
+        var i = document.createElement("div");
+        for (var n of bttvForVKNS.parseEmotes(e.text))
+          i.appendChild(n);
+        e.text = i.innerHTML;
+      }
+      return bttvForVKNS.vk_getTemplate(t, e);
+    }
+
+    if (document.getElementsByClassName("im-page-wrapper").length > 0)
+      bttv_visualizeEmotesOnPage();
+
+    // Starred and forwarded tab
+    bttvForVKNS.boxLayerObserver = new (window.MutationObserver || window.WebKitMutationObserver)(function(muts, o) {
+      try {
+        if (muts[1].addedNodes[0].className == "im_single_log_wrap") {
+          for (var el of muts[1].addedNodes[0].getElementsByClassName("im-mess--text wall_module"))
+            bttvForVKNS.replaceEmotes(el);
+        } else if (muts[0].addedNodes[0].classList[1] == "im-important-box") {
+          for (var el of muts[0].addedNodes[0].getElementsByClassName("im-mess--text wall_module"))
+            bttvForVKNS.replaceEmotes(el);
+        }
+      } catch (e) {}
+    });
+
+    bttvForVKNS.boxLayerObserver.observe(document.getElementById("box_layer"), {
+      subtree: true,
+      attributes: false,
+      childList: true
+    });
+
+    bttvForVKNS.imObserver = new (window.MutationObserver || window.WebKitMutationObserver)(function(muts, o) {
+      try {
+        if (muts[0].target.id == "wrap3" && muts[0].addedNodes[0].id == "wrap2" && muts[0].addedNodes[0].firstElementChild.firstElementChild.firstElementChild.classList[0] == "im-page-wrapper")
+          bttv_visualizeEmotesOnPage();
+        else if (muts[1].target.id == "im_dialogs" && muts[1].addedNodes[0].classList[0] == "nim-dialog") {
+          var el;
+          for (var m of muts) {
+            if (m.addedNodes.length > 0) {
+              el = m.addedNodes[0].lastElementChild.firstElementChild.children[5].firstElementChild;
+              if (el.lastElementChild !== null && el.lastElementChild.className == "nim-dialog--inner-text")
+                bttvForVKNS.replaceEmotes(el.lastElementChild);
+              else
+                bttvForVKNS.replaceEmotes(el);
+            }
+          }
+        } else if (muts[0].target.classList[1] == "im-chat-input--fwd" && muts[0].addedNodes[1].classList[1] == "im-fwd_msg")
+          bttvForVKNS.replaceEmotes(muts[0].addedNodes[1].lastElementChild);
+        else if (muts[0].target.className.substr(0,13) == "_im_msg_reply") {
+          var container = muts[0].addedNodes[0].lastElementChild.lastElementChild;
+          var child = container.childNodes[0];
+          if (child.nodeName === "#text") {
+            for (var n of bttvForVKNS.parseEmotes(child.nodeValue))
+              container.insertBefore(n, child);
+            child.remove();
+          }
+        } else if (muts[0].target.className.substr(0,13) == "_im_msg_media") {
+          for (var el of muts[0].target.getElementsByClassName("im-mess--text wall_module"))
+            bttvForVKNS.replaceEmotes(el);
+        }
+      } catch (e) {}
+    });
+
+    bttvForVKNS.imObserver.observe(document.getElementById("wrap3"), {
+      subtree: true,
+      attributes: false,
+      childList: true
+    });
+
+    window.addEventListener("mouseup", function(e) {
+      e.preventDefault();
+      bttvForVKNS.scrollbar.style.webkitTransition = ".2s";
+      bttvForVKNS.scrollbar.style.transition = ".2s";
+      bttvForVKNS.menuDraggingBar = false;
+    });
+    window.addEventListener("mousemove", function(e) {
+      if (bttvForVKNS.menuDraggingBar) {
+        bttvForVKNS.handleScrollBar(bttvForVKNS.menuScrollOffset+e.pageY-bttvForVKNS.menuStartDraggingPoint, true);
+        bttvForVKNS.menuStartDraggingPoint = e.pageY;
+      }
+    });
   });
-});
+} else
+  console.error("Window is already loaded. Couldn't handle window.onload event.");
