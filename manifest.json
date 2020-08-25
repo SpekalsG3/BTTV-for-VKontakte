@@ -8,7 +8,11 @@
     "128": "icons/128px.png",
     "512": "icons/512px.png"
   },
-  "page_action": {
+  "background": {
+    "scripts": ["common.js"],
+    "persistent": false
+  },
+  "browser_action": {
     "default_icon": {
       "64": "icons/64px.png",
       "128": "icons/128px.png",
@@ -23,7 +27,6 @@
     "js": ["index.js"]
   }],
   "permissions": [
-    "*://*.vk.com/*",
     "storage",
     "activeTab"
   ],
