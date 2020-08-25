@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+  "name": "BTTV for VKontakte",
+  "version": "1.0",
+  "default_locale": "en",
+  "description": "This extension is an adaptation of BTTV for vk",
+  "icons": {
+
+  },
+  "page_action": {
+    "default_icon": {
+
+    },
+    "default_title": "BTTV for VKontakte",
+    "default_popup": 
+  },
+  "permissions": ["*://*.vk.com/*"]
+}

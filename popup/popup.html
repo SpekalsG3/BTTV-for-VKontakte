@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BTTV for VKontakte</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" type="text/css" href="popup.css" />
+</head>
+<body>
+  <div class="bttv_popup">
+    <header class="bttv_popup-header">
+      <div class="bttv_popup-logo">
+        <img src="../icons/settings_logo.png" />
+      </div>
+      <div id="bttv_nav">
+        <div class="bttv_nav-tab">About</div>
+        <div class="bttv_nav-tab bttv_nav-tab--current">Settings</div>
+        <div class="bttv_nav-tab">Privacy Policy</div>
+      </div>
+      <div id="bttv_close">×</div>
+    </header>
+    <div class="bttv_pages">
+      <div class="bttv_page bttv_page--info" style="z-index: 1; opacity: 0">
+        <a target="_blank" rel="noopener noreferrer" href="https://betterttv.com/">
+          <div class="bttv_page-copyright">
+            <img class="bttv_page-logo" src="../icons/mascot.png">
+            <h1>Original BTTV</h1>
+          </div>
+        </a>
+        <h2>
+          "BTTV for VKontakte addon" provides emote display in messages tab. Maybe there will be more functionality in the future to improve overall VKontakte experience and you can help me on <a target="_blank" rel="noopener noreferrer" href="#">github page</a>.
+        </h2>
+      </div>
+      <div class="bttv_page">
+        <div class="bttv_page-option">
+          <div class="bttv_page-option--about">
+            <span class="bttv_page-option--name">BetterTV GIF Emotes</span>
+            <span class="bttv_page-option--desc"> — Adds animated emotes (not everyone likes GIFs, but most people do)</span>
+          </div>
+          <div class="bttv_switch">
+            <label>
+              <input type="checkbox" name="showGifs">
+              <div class="bttv_switch-box bttv_switch-box--off">
+                <div class="bttv_switch-mark"></div>
+                <span class="bttv_switch-span bttv_switch-span--off">off</span>
+                <span class="bttv_switch-span bttv_switch-span--on">on</span>
+              </div>
+            </label>
+          </div>
+          <!-- <div class="bttv_radio">
+            <input type="radio" name="showGifs" id="showGifsOff">
+            <label class="bttv_radio-label" for="showGifsOff">off</label>
+            <input type="radio" name="showGifs" id="showGifsOn" checked="checked">
+            <label class="bttv_radio-label" for="showGifsOn">on</label>
+            <span class="bttv_radio-mark"></span>
+          </div> -->
+        </div>
+        <div class="bttv_page-option">
+          <div class="bttv_page-option--about">
+            <span class="bttv_page-option--name">Emote Menu</span>
+            <span class="bttv_page-option--desc"> — Enables a more advanced emote menu for VKontakte</span>
+          </div>
+          <div class="bttv_switch">
+            <label>
+              <input type="checkbox" name="emoteMenu">
+              <div class="bttv_switch-box bttv_switch-box--off">
+                <div class="bttv_switch-mark"></div>
+                <span class="bttv_switch-span bttv_switch-span--off">off</span>
+                <span class="bttv_switch-span bttv_switch-span--on">on</span>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="bttv_page-option">
+          <div class="bttv_page-option--about">
+            <span class="bttv_page-option--name">FrankerFaceZ Emotes</span>
+            <span class="bttv_page-option--desc"> — Enables emotes from that other extension people usually use</span>
+          </div>
+          <div class="bttv_switch">
+            <label>
+              <input type="checkbox" name="frankerZEmotes">
+              <div class="bttv_switch-box bttv_switch-box--off">
+                <div class="bttv_switch-mark"></div>
+                <span class="bttv_switch-span bttv_switch-span--off">off</span>
+                <span class="bttv_switch-span bttv_switch-span--on">on</span>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="bttv_page-option">
+          <div class="bttv_page-option--about">
+            <span class="bttv_page-option--name">List of autocompleted emotes</span>
+            <span class="bttv_page-option--desc"> — Shows list of emotes that available for autocompletion</span>
+          </div>
+          <div class="bttv_switch">
+            <label>
+              <input type="checkbox" name="predictedMenu">
+              <div class="bttv_switch-box bttv_switch-box--off">
+                <div class="bttv_switch-mark"></div>
+                <span class="bttv_switch-span bttv_switch-span--off">off</span>
+                <span class="bttv_switch-span bttv_switch-span--on">on</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="bttv_page bttv_page--info" style="z-index: 1; opacity: 0">
+        <h2>This addon does NOT use, store, collect or share any of your personal information except settings provided in this popup's settings tab.</h2>
+      </div>
+    </div>
+    <div class="footer">
+      <a target="_blank" rel="noopener noreferrer" href="#">Bug report</a>
+    </div>
+  </div>
+  <script type="text/javascript" src="popup.js"></script>
+</body>
+</html>
