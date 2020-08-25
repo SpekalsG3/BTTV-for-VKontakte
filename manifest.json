@@ -20,7 +20,7 @@
   "content_scripts": [{
     "matches": ["*://*.vk.com/*"],
     "css": ["bttv_for_vk.css"],
-    "js": ["runup.js"]
+    "js": ["index.js"]
   }],
   "permissions": [
     "*://*.vk.com/*",
