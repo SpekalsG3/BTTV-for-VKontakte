@@ -9,7 +9,7 @@
     "512": "icons/512px.png"
   },
   "background": {
-    "scripts": ["common.js"],
+    "scripts": ["src/common.js"],
     "persistent": false
   },
   "browser_action": {
@@ -23,12 +23,12 @@
   },
   "content_scripts": [{
     "matches": ["*://vk.com/*"],
-    "css": ["bttv_for_vk.css"],
-    "js": ["index.js"]
+    "css": ["src/bttv_for_vk.css"],
+    "js": ["src/index.js"]
   }],
   "permissions": [
     "storage",
     "activeTab"
   ],
-  "web_accessible_resources": ["bttv_for_vk.js"]
+  "web_accessible_resources": ["src/bttv_for_vk.js"]
 }
