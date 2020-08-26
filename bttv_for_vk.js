@@ -313,6 +313,14 @@ bttvForVKNS.predictEmote = function(e) {
   }
 }
 bttvForVKNS.scrollbar = bttvForVKNS.createElement("div", {className: "bttv_emotes-scrollbar"});
+bttvForVKNS.scrollbar.addEventListener("mousedown", function(e) {
+  e.preventDefault();
+  bttvForVKNS.scrollbar.style.webkitTransition = "none";
+  bttvForVKNS.scrollbar.style.transition = "none";
+  bttvForVKNS.menuDraggingBar = true;
+  bttvForVKNS.menuStartDraggingPoint = e.pageY;
+});
+
 bttvForVKNS.emoteContainer = [
   bttvForVKNS.createElement("div", {className:"bttv_emotes-group"},[
     bttvForVKNS.createElement("div", {
@@ -330,6 +338,10 @@ bttvForVKNS.emoteContainer = [
   ])
 ]
 bttvForVKNS.emoteScrollable = bttvForVKNS.createElement("div", {className: "bttv_emotes-scrollable--inner"},bttvForVKNS.emoteContainer);
+bttvForVKNS.emoteScrollable.addEventListener('onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel', function(e) {
+  bttvForVKNS.handleScrollBar(bttvForVKNS.menuScrollOffset+e.deltaY);
+});
+
 bttvForVKNS.emotesMenu = bttvForVKNS.createElement("div", {className:"bttv_emotes-menu"},[
   bttvForVKNS.createElement("div", {className:"bttv_emotes-scrollable"},[bttvForVKNS.emoteScrollable]),
   bttvForVKNS.createElement("div", {className:"bttv_emotes-scrollarea"},[bttvForVKNS.scrollbar]),
@@ -377,24 +389,11 @@ bttvForVKNS.emoteButtonWrapper.addEventListener("click", function() {
 });
 
 bttvForVKNS.appendPredictedMenu = function() {
-  var imInput = document.getElementsByClassName("im-page--chat-input")[0];
-  imInput.appendChild(bttvForVKNS.createElement("div", {"className": "bttv_predicted-error"}, [bttvForVKNS.predictErrorMsg]));
-  imInput.appendChild(bttvForVKNS.predictedMenu);
+  document.getElementsByClassName("im-page--chat-input")[0].appendChild(bttvForVKNS.predictedMenu);
 }
 bttvForVKNS.appendEmoteMenu = function() {
   var inputButtons = document.getElementsByClassName("im_chat-input--buttons")[0];
   inputButtons.insertBefore(bttvForVKNS.emoteButtonWrapper, inputButtons.children[2]);
-
-  bttvForVKNS.emoteScrollable.addEventListener('onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel', function(e) {
-    bttvForVKNS.handleScrollBar(bttvForVKNS.menuScrollOffset+e.deltaY);
-  });
-  bttvForVKNS.scrollbar.addEventListener("mousedown", function(e) {
-    e.preventDefault();
-    bttvForVKNS.scrollbar.style.webkitTransition = "none";
-    bttvForVKNS.scrollbar.style.transition = "none";
-    bttvForVKNS.menuDraggingBar = true;
-    bttvForVKNS.menuStartDraggingPoint = e.pageY;
-  });
 }
 
 bttvForVKNS.visualizeEmotesOnPage = function() {
@@ -419,6 +418,8 @@ bttvForVKNS.visualizeEmotesOnPage = function() {
 
   if (bttvForVKNS.settings.emoteMenu)
     bttvForVKNS.appendEmoteMenu();
+
+  document.getElementsByClassName("im-page--chat-input")[0].appendChild(bttvForVKNS.createElement("div", {"className": "bttv_predicted-error"}, [bttvForVKNS.predictErrorMsg]));
 
   // Attached fowared message
   var fwd_msg = document.getElementsByClassName("im-fwd im-fwd_msg");
@@ -600,13 +601,16 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
       if (bttvForVKNS.settings.predictedMenu)
         bttvForVKNS.appendPredictedMenu();
       else
-        bttvForVKNS.predictedMenu.style.display = "none";
+        document.getElementsByClassName("im-page--chat-input")[0].removeChild(bttvForVKNS.predictedMenu);
     } else if (e.detail.updated === "emoteMenu") {
       if (bttvForVKNS.settings.emoteMenu)
         bttvForVKNS.appendEmoteMenu();
       else {
-        var inputButtons = document.getElementsByClassName("im_chat-input--buttons")[0];
-        inputButtons.removeChild(bttvForVKNS.emoteButtonWrapper);
+        document.getElementsByClassName("im_chat-input--buttons")[0].removeChild(bttvForVKNS.emoteButtonWrapper);
+        bttvForVKNS.emotesMenu.style.display = "none";
+        bttvForVKNS.emoteButtonImage.style.webkitFilter = "grayscale(100%)";
+        bttvForVKNS.emoteButtonImage.style.filter = "grayscale(100%)";
+        bttvForVKNS.emotesMenuShown = false;
       }
     }
   }
