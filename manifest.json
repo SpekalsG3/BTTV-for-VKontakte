@@ -22,7 +22,7 @@
     "default_popup": "popup/popup.html"
   },
   "content_scripts": [{
-    "matches": ["*://*.vk.com/*"],
+    "matches": ["*://vk.com/*"],
     "css": ["bttv_for_vk.css"],
     "js": ["index.js"]
   }],

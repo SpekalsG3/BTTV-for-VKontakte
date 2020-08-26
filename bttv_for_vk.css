@@ -73,8 +73,8 @@
 }
 
 .bttv_emote-button-image:hover {
-  -webkit-filter: none;
-  filter: none;
+  -webkit-filter: none !important;
+  filter: none !important;
 }
 
 .bttv_emotes-menu {

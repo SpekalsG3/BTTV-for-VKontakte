@@ -15,9 +15,16 @@ var bttvForVKPopupNS = {
   },
 };
 bttvForVKPopupNS.handleSwitch = function() {
-  bttvForVKPopupNS.settings[this.name] = this.checked;
+  var key = this.name,
+      value = this.checked;
+  bttvForVKPopupNS.settings[key] = value;
   chrome.storage.sync.set({"bttvForVK": bttvForVKPopupNS.settings}, function() {
-    console.log("Saved", this.name, "to", this.checked);
+    console.log("Saved", key, "to", value);
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      if (tabs[0].url.slice(0,15) === "https://vk.com/") {
+        chrome.tabs.sendMessage(tabs[0].id, {"bttvForVK": bttvForVKPopupNS.settings, "action": "update", "updated": key});
+      }
+    })
   });
 }
 
@@ -26,12 +33,6 @@ chrome.storage.sync.get("bttvForVK", function(obj) {
   for (var box of document.getElementsByClassName("bttv_switch")) {
     var input = box.firstElementChild.firstElementChild;
     input.checked = bttvForVKPopupNS.settings[input.name];
-    // (function(i) {
-    //   chrome.storage.sync.get(i.name, function(obj) {
-    //     console.log(i.name, obj);
-    //     i.checked = obj[i.name];
-    //   });
-    // })(input);
     input.addEventListener("change", bttvForVKPopupNS.handleSwitch);
   }
 });
