@@ -5,7 +5,7 @@ chrome.runtime.onInstalled.addListener(function(details){
         "showGifs": true,
         "emoteMenu": true,
         "frankerZEmotes": true,
-        "predictedMenu": false
+        "predictedMenu": true
       }
     })
   }
