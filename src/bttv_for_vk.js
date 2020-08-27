@@ -54,7 +54,7 @@ bttvForVKNS.parseEmotes = function(text) {
       emote = {};
   for (var i = 0; i <= l; i++) {
     if (text[i] == ' ' || i == l) {
-      if (word in bttvForVKNS.bttvEmotes &&
+      if ((word in bttvForVKNS.bttvEmotes) &&
           (bttvForVKNS.settings.showGifs || !bttvForVKNS.bttvEmotes[word].animated) &&
           (bttvForVKNS.settings.frankerZEmotes || !bttvForVKNS.bttvEmotes[word].frankerfacez)) {
         if (textBefore != "")
@@ -280,7 +280,9 @@ bttvForVKNS.predictEmote = function(e) {
       if (wordBeforeTabbed == "")
         bttvForVKNS.predictedEmotes = [];
       else
-        bttvForVKNS.predictedEmotes = Object.keys(bttvForVKNS.bttvEmotes).filter(emote => emote.toLowerCase().startsWith(wordBeforeTabbed.toLowerCase()));
+        bttvForVKNS.predictedEmotes = Object.keys(bttvForVKNS.bttvEmotes).filter(emote => emote.toLowerCase().startsWith(wordBeforeTabbed.toLowerCase()) &&
+         (bttvForVKNS.settings.showGifs || !bttvForVKNS.bttvEmotes[emote].animated) &&
+         (bttvForVKNS.settings.frankerZEmotes || !bttvForVKNS.bttvEmotes[emote].frankerfacez));
 
       if (bttvForVKNS.predictedEmotes.length == 0)
         bttvForVKNS.predictedMenu.style.display = "none";
@@ -322,22 +324,26 @@ bttvForVKNS.scrollbar.addEventListener("mousedown", function(e) {
 });
 
 bttvForVKNS.emoteContainer = [
+  bttvForVKNS.createElement("div", {className:"bttv_emotes-wall"}),
+  bttvForVKNS.createElement("div", {className:"bttv_emotes-wall"})
+];
+
+bttvForVKNS.emoteScrollable = bttvForVKNS.createElement("div", {className: "bttv_emotes-scrollable--inner"},[
   bttvForVKNS.createElement("div", {className:"bttv_emotes-group"},[
     bttvForVKNS.createElement("div", {
       className:"bttv_emotes-group--title",
       innerHTML:"BTTV Emotes"
     }),
-    bttvForVKNS.createElement("div", {className:"bttv_emotes-wall"})
+    bttvForVKNS.emoteContainer[0]
   ]),
   bttvForVKNS.createElement("div", {className:"bttv_emotes-group"},[
     bttvForVKNS.createElement("div", {
       className:"bttv_emotes-group--title",
       innerHTML:"FrankerFaceZ Emotes"
     }),
-    bttvForVKNS.createElement("div", {className:"bttv_emotes-wall"})
+    bttvForVKNS.emoteContainer[1]
   ])
-]
-bttvForVKNS.emoteScrollable = bttvForVKNS.createElement("div", {className: "bttv_emotes-scrollable--inner"},bttvForVKNS.emoteContainer);
+]);
 bttvForVKNS.emoteScrollable.addEventListener('onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel', function(e) {
   bttvForVKNS.handleScrollBar(bttvForVKNS.menuScrollOffset+e.deltaY);
 });
@@ -346,30 +352,37 @@ bttvForVKNS.emotesMenu = bttvForVKNS.createElement("div", {className:"bttv_emote
   bttvForVKNS.createElement("div", {className:"bttv_emotes-scrollable"},[bttvForVKNS.emoteScrollable]),
   bttvForVKNS.createElement("div", {className:"bttv_emotes-scrollarea"},[bttvForVKNS.scrollbar]),
 ]);
-bttvForVKNS.scrollHeight = bttvForVKNS.emoteScrollable.scrollHeight;
 bttvForVKNS.emoteButtonImage = bttvForVKNS.createElement("div", {"className": "bttv_emote-button-image"});
 bttvForVKNS.emoteButtonWrapper = bttvForVKNS.createElement("div", {"className": "bttv_emote-button-wrapper"}, [bttvForVKNS.emoteButtonImage]);
 
-for (var name in bttvForVKNS.bttvEmotes) {
-  var emote = bttvForVKNS.bttvEmotes[name];
-  var emotePreview = bttvForVKNS.createElement("div", {
-    "title": name,
-    "className": "bttv_emotes-preview"
-  }, [
-    bttvForVKNS.createElement("img", {
-      "src": "https://cdn.betterttv.net/" + (emote.frankerfacez ? "frankerfacez_emote/" : "emote/") + emote.id + "/" + emote.size,
-      "className": "bttv_emotes-preview--image",
-      "alt": name
-    })
-  ]);
+bttvForVKNS.fillEmotesMenu = function() {
+  bttvForVKNS.emoteContainer[0].innerHTML = "";
+  bttvForVKNS.emoteContainer[1].innerHTML = "";
+  for (var name in bttvForVKNS.bttvEmotes) {
+    var emote = bttvForVKNS.bttvEmotes[name];
+    if (!bttvForVKNS.settings.showGifs && emote.animated)
+      continue;
+    var emotePreview = bttvForVKNS.createElement("div", {
+      "title": name,
+      "className": "bttv_emotes-preview"
+    }, [
+      bttvForVKNS.createElement("img", {
+        "src": "https://cdn.betterttv.net/" + (emote.frankerfacez ? "frankerfacez_emote/" : "emote/") + emote.id + "/" + emote.size,
+        "className": "bttv_emotes-preview--image",
+        "alt": name
+      })
+    ]);
 
-  emotePreview.addEventListener("click", function() {
-    bttvForVKNS.insertInEditable(this.title);
-  });
-  if (emote.frankerfacez)
-    bttvForVKNS.emoteContainer[1].appendChild(emotePreview);
-  else
-    bttvForVKNS.emoteContainer[0].appendChild(emotePreview);
+    emotePreview.addEventListener("click", function() {
+      bttvForVKNS.insertInEditable(this.title);
+    });
+    if (emote.frankerfacez) {
+      if (bttvForVKNS.settings.frankerZEmotes)
+        bttvForVKNS.emoteContainer[1].appendChild(emotePreview);
+    }
+    else
+      bttvForVKNS.emoteContainer[0].appendChild(emotePreview);
+  }
 }
 
 bttvForVKNS.emoteButtonWrapper.addEventListener("click", function() {
@@ -451,16 +464,19 @@ if (window.getSelection) {
 window.addEventListener("bttvForVKSettingsChange", function(e) {
   bttvForVKNS.settings = e.detail.bttvForVK;
   if (e.detail.action === "load") {
+    bttvForVKNS.fillEmotesMenu();
     document.body.appendChild(bttvForVKNS.emotesMenu);
 
     bttvForVKNS.emotesMenuSizes = {
       height: bttvForVKNS.emotesMenu.clientHeight,
       width: bttvForVKNS.emotesMenu.clientWidth
     };
-    bttvForVKNS.emotesMenu.style.display = "none";
+    bttvForVKNS.scrollHeight = bttvForVKNS.emoteScrollable.scrollHeight;
     bttvForVKNS.scrollareaHeight = bttvForVKNS.emotesMenuSizes.height;
     bttvForVKNS.scrollSpace = bttvForVKNS.scrollHeight-bttvForVKNS.scrollareaHeight;
     bttvForVKNS.scrollbar.style.height = bttvForVKNS.scrollareaHeight*bttvForVKNS.scrollareaHeight/bttvForVKNS.scrollHeight + "px";
+
+    bttvForVKNS.emotesMenu.style.display = "none";
 
     bttvForVKNS.vk_se = window.se;
     window.se = function(t) {
@@ -619,7 +635,8 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
         bttvForVKNS.emoteButtonImage.style.filter = "grayscale(100%)";
         bttvForVKNS.emotesMenuShown = false;
       }
-    }
+    } else if (e.detail.updated === "showGifs")
+      bttvForVKNS.fillEmotesMenu();
   }
 });
 
