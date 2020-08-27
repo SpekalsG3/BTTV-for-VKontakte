@@ -18,24 +18,26 @@ bttvForVKPopupNS.handleSwitch = function() {
   var key = this.name,
       value = this.checked;
   bttvForVKPopupNS.settings[key] = value;
-  chrome.storage.sync.set({"bttvForVK": bttvForVKPopupNS.settings}, function() {
-    console.log("Saved", key, "to", value);
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      if (tabs[0].url.slice(0,15) === "https://vk.com/") {
-        chrome.tabs.sendMessage(tabs[0].id, {"bttvForVK": bttvForVKPopupNS.settings, "action": "update", "updated": key});
-      }
-    })
-  });
+  // chrome.storage.sync.set({"bttvForVK": bttvForVKPopupNS.settings}, function() {
+  //   console.log("Saved", key, "to", value);
+  //   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  //     if (tabs[0].url.slice(0,15) === "https://vk.com/") {
+  //       chrome.tabs.sendMessage(tabs[0].id, {"bttvForVK": bttvForVKPopupNS.settings, "action": "update", "updated": key});
+  //     }
+  //   })
+  // });
 }
+document.getElementById("bttv_donation")
 
-chrome.storage.sync.get("bttvForVK", function(obj) {
-  bttvForVKPopupNS.settings = obj["bttvForVK"];
+// chrome.storage.sync.get("bttvForVK", function(obj) {
+//   bttvForVKPopupNS.settings = obj["bttvForVK"];
+  bttvForVKPopupNS.settings = {};
   for (var box of document.getElementsByClassName("bttv_switch")) {
     var input = box.firstElementChild.firstElementChild;
     input.checked = bttvForVKPopupNS.settings[input.name];
     input.addEventListener("change", bttvForVKPopupNS.handleSwitch);
   }
-});
+// });
 
 for (var tab of document.getElementsByClassName("bttv_nav-tab"))
   tab.addEventListener("click", bttvForVKPopupNS.handleTabClick);

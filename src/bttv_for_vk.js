@@ -428,7 +428,14 @@ bttvForVKNS.visualizeEmotesOnPage = function() {
 
   bttvForVKNS.input = document.getElementsByClassName("im-chat-input--text im_editable")[0];
   bttvForVKNS.input.addEventListener("blur", function() {
-    bttvForVKNS.updateCursorPlacement();
+    switch (bttvForVKNS.updateCursorPlacement()) {
+      case 1:
+        bttvForVKNS.twoLayers = false;
+        bttvForVKNS.activeYNode = 0;
+        bttvForVKNS.activeXNode = 0;
+        bttvForVKNS.cursorIndex = 0;
+        break;
+    }
     typing = false;
   });
 }
