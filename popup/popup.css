@@ -4,7 +4,6 @@ html, body {
 }
 body {
   position: relative;
-  width: 470px;
   background: #1e1e1e;
   font-family: Helvetica,Arial,sans-serif;
 }
@@ -124,7 +123,10 @@ body {
   background: #232323;
 }
 .bttv_page-option--about {
-  width: 325px;
+  width: -moz-calc(100% - 145px);
+  width: -webkit-calc(100% - 145px);
+  width: -o-calc(100% - 145px);
+  width: calc(100% - 145px);
   font-size: 12px;
   padding: 11px 0 10px;
 }

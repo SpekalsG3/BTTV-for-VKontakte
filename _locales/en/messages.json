@@ -1,0 +1,86 @@
+{
+  "extName": {
+    "message": "BTTV for VKontakte",
+    "description": "Extension name."
+  },
+  "extDesc": {
+    "message": "This is an unrelated version of BTTV for VKontakte.",
+    "description": "Extension description."
+  },
+  "navAbout": {
+    "message": "About",
+    "description": "Popup about tab title."
+  },
+  "navSettings": {
+    "message": "Settings",
+    "description": "Popup settings tab title."
+  },
+  "navPrivacy": {
+    "message": "Privacy policy",
+    "description": "Popup privacy policy tab title."
+  },
+  "navDonation": {
+    "message": "Donation",
+    "description": "Popup donations tab title."
+  },
+  "aboutBttvLink": {
+    "message": "Link to Original BTTV",
+    "description": "Text in the link to original BTTV."
+  },
+  "aboutText": {
+    "message": "\"BTTV for VKontakte\" addon provides emote display in messages tab. There will be more functionality in the future to improve overall VKontakte experience and you can help me at ",
+    "description": "Text in popup about tab."
+  },
+  "aboutGithubLink": {
+    "message": "github repository",
+    "description": "Text in the link to \"BTTV for VKontakte\" github repository."
+  },
+  "settingsGifsName": {
+    "message": "BetterTV GIF Emotes",
+    "description": "\"Show Gifs\" setting name."
+  },
+  "settingsGifsDesc": {
+    "message": " — Adds animated emotes (not everyone likes GIFs, but most people do)",
+    "description": "\"Show Gif Emotes\" setting desc."
+  },
+  "settingsMenuName": {
+    "message": "Emote Menu",
+    "description": "\"Show Emotes Menu\" setting name."
+  },
+  "settingsMenuDesc": {
+    "message": " — Enables a more advanced emote menu for VKontakte",
+    "description": "\"Show Emotes Menu\" setting desc."
+  },
+  "settingsFrankerzName": {
+    "message": "FrankerFaceZ Emotes",
+    "description": "\"Show FrankerFaceZ Emotes\" setting name."
+  },
+  "settingsFrankerzDesc": {
+    "message": " — Enables emotes from that other extension people usually use",
+    "description": "\"Show FrankerFaceZ Emotes\" setting desc."
+  },
+  "settingsPredictedName": {
+    "message": "List of autocompleted emotes",
+    "description": "\"Show Predicted Emotes List\" setting name."
+  },
+  "settingsPredictedDesc": {
+    "message": " — Shows list of emotes that starts with the same word you entered",
+    "description": "\"Show Predicted Emotes List\" setting desc."
+  },
+  "privacyPolicy": {
+    "message": "This addon does NOT use, collect or share any of your personal information except settings provided in this popup settings tab.",
+    "description": "Privacy policy text"
+  },
+  "donationText1": {
+    "message": "Want to help and motivate me to improve this addon?",
+    "description": "First text part for popup donations tab"
+  },
+  "donationText2": {
+    "message": "Make a donation via Yandex Money.",
+    "description": "Second text part for popup donations tab"
+  },
+  "bugReport": {
+    "message": "Bug report",
+    "description": "Text for bug report"
+  }
+}

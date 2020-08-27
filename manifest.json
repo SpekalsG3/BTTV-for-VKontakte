@@ -1,8 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "BTTV for VKontakte",
+  "name": "__MSG_extName__",
   "version": "1.0",
-  "description": "This is an unrelated version of BTTV for VKontakte",
+  "default_locale": "en",
+  "description": "__MSG_extDesc__",
   "icons": {
     "64": "icons/64px.png",
     "128": "icons/128px.png",
