@@ -210,7 +210,7 @@
 .bttv_predicted-error {
   position: absolute;
   width: 594px;
-  bottom: 65px;
+  top: -32px;
   z-index: -1;
   pointer-events: none;
   text-align: center;

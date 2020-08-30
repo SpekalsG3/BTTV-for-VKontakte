@@ -251,10 +251,10 @@ bttvForVKNS.predictEmote = function(e) {
 
     e.stopPropagation();
     e.preventDefault();
-  } else if (bttvForVKNS.settings.predictedMenu) {
+  } else {
     if (e.key == ' ')
       bttvForVKNS.predictedMenu.style.display = "none";
-    else {
+    else if (bttvForVKNS.settings.predictedMenu) {
       if (bttvForVKNS.updateCursorPlacement())
         return;
 
