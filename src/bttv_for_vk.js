@@ -162,8 +162,7 @@ bttvForVKNS.insertInEditable = function(name, replace = false) {
       currentNodeText = bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].nodeValue;
     else
       currentNodeText = bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeValue;
-  }
-  else {
+  } else {
     bttvForVKNS.input.append("");
     currentNodeText  = "";
   }
@@ -175,13 +174,21 @@ bttvForVKNS.insertInEditable = function(name, replace = false) {
     }
   } else {
     bttvForVKNS.wordStart = bttvForVKNS.cursorIndex;
-    if (bttvForVKNS.cursorIndex > 0 && currentNodeText [bttvForVKNS.cursorIndex-1])
+    if (bttvForVKNS.cursorIndex > 0 && currentNodeText[bttvForVKNS.cursorIndex-1])
       spaceBefore = " ";
   }
-  if (bttvForVKNS.twoLayers)
-    bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].nodeValue = currentNodeText.substr(0,bttvForVKNS.wordStart+1) + spaceBefore + name + " " + currentNodeText .substr(bttvForVKNS.cursorIndex);
-  else
-    bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeValue = currentNodeText.substr(0,bttvForVKNS.wordStart+1) + spaceBefore + name + " " + currentNodeText .substr(bttvForVKNS.cursorIndex);
+  if (currentNodeText === "" && !bttvForVKNS.activeYNode && !bttvForVKNS.activeXNode) {
+    var msgBtn = document.getElementsByClassName("im-send-btn im-chat-input--send")[0];
+    msgBtn.classList.remove("im-send-btn_audio");
+    msgBtn.classList.add("im-send-btn_send");
+    msgBtn.setAttribute("aria-label", "Send");
+    bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeValue = name + " ";
+  } else {
+    if (bttvForVKNS.twoLayers)
+      bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].nodeValue = currentNodeText.substr(0,bttvForVKNS.wordStart+1) + spaceBefore + name + " " + currentNodeText.substr(bttvForVKNS.cursorIndex);
+    else
+      bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeValue = currentNodeText.substr(0,bttvForVKNS.wordStart+1) + spaceBefore + name + " " + currentNodeText.substr(bttvForVKNS.cursorIndex);
+  }
   bttvForVKNS.cursorIndex = bttvForVKNS.wordStart + name.length + 1 + (spaceBefore == " ");
   bttvForVKNS.input.focus();
   var sel = window.getSelection();
@@ -254,10 +261,7 @@ bttvForVKNS.predictEmote = function(e) {
   } else {
     if (e.key == ' ')
       bttvForVKNS.predictedMenu.style.display = "none";
-    else if (bttvForVKNS.settings.predictedMenu) {
-      if (bttvForVKNS.updateCursorPlacement())
-        return;
-
+    else if (!bttvForVKNS.updateCursorPlacement() && bttvForVKNS.settings.predictedMenu) {
       var currentNodeText;
       if (bttvForVKNS.input.childNodes.length > 0) {
         if (bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeName != "#text" && !bttvForVKNS.twoLayers)
@@ -379,8 +383,7 @@ bttvForVKNS.fillEmotesMenu = function() {
     if (emote.frankerfacez) {
       if (bttvForVKNS.settings.frankerZEmotes)
         bttvForVKNS.emoteContainer[1].appendChild(emotePreview);
-    }
-    else
+    } else
       bttvForVKNS.emoteContainer[0].appendChild(emotePreview);
   }
 }
@@ -517,20 +520,31 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
         var i = document.createElement("div");
         i.innerHTML = e;
         // load new messages
-        if (i.children.length > 0 && (i.firstElementChild.classList[0] === "im-mess-stack" || i.firstElementChild.classList[0] === "im-page--history-new-bar")) { 
-          for (var el of i.getElementsByClassName("im-mess--text wall_module"))
-            bttvForVKNS.replaceEmotes(el);
-          arguments[1] = i.innerHTML;
-        }
-        else if (i.children.length > 1 && i.lastElementChild.className == "nim-dialog--inner-text") {
-          bttvForVKNS.replaceEmotes(i.children[1]);
-          arguments[1] = i.innerHTML;
-        }
-        // new sent message in dialog tab
-        else if (t.classList !== undefined && t.classList[0] == "nim-dialog--preview") {
-          bttvForVKNS.replaceEmotes(i);
-          arguments[1] = i.innerHTML;
-        }
+        do {
+          try {
+            if (i.firstElementChild.classList[0] === "im-mess-stack" || i.firstElementChild.classList[0] === "im-page--history-new-bar") { 
+              for (var el of i.getElementsByClassName("im-mess--text wall_module"))
+                bttvForVKNS.replaceEmotes(el);
+              arguments[1] = i.innerHTML;
+              break;
+            }
+          } catch (e) {}
+          try {
+            if (i.lastElementChild.className == "nim-dialog--inner-text") {
+              bttvForVKNS.replaceEmotes(i.children[1]);
+              arguments[1] = i.innerHTML;
+              break;
+            }
+          } catch(e) {}
+          // new sent message in dialog tab
+          try {
+            if (t.classList[0] == "nim-dialog--preview") {
+              bttvForVKNS.replaceEmotes(i);
+              arguments[1] = i.innerHTML;
+              break;
+            }
+          } catch(e) {}
+        } while (false);
       }
       return bttvForVKNS.vk_val(...arguments);
     }
@@ -556,7 +570,11 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
         if (muts[1].addedNodes[0].className == "im_single_log_wrap") {
           for (var el of muts[1].addedNodes[0].getElementsByClassName("im-mess--text wall_module"))
             bttvForVKNS.replaceEmotes(el);
-        } else if (muts[0].addedNodes[0].classList[1] == "im-important-box") {
+          return;
+        }
+      } catch (e) {}
+      try {
+        if (muts[0].addedNodes[0].classList[1] == "im-important-box") {
           for (var el of muts[0].addedNodes[0].getElementsByClassName("im-mess--text wall_module"))
             bttvForVKNS.replaceEmotes(el);
         }
@@ -571,9 +589,13 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
 
     bttvForVKNS.imObserver = new (window.MutationObserver || window.WebKitMutationObserver)(function(muts, o) {
       try {
-        if (muts[0].target.id == "wrap3" && muts[0].addedNodes[0].id == "wrap2" && muts[0].addedNodes[0].firstElementChild.firstElementChild.firstElementChild.classList[0] == "im-page-wrapper")
+        if (muts[0].target.id == "wrap3" && muts[0].addedNodes[0].id == "wrap2" && muts[0].addedNodes[0].firstElementChild.firstElementChild.firstElementChild.classList[0] == "im-page-wrapper") {
           bttvForVKNS.visualizeEmotesOnPage();
-        else if (muts[1].target.id == "im_dialogs" && muts[1].addedNodes[0].classList[0] == "nim-dialog") {
+          return;
+        }
+      } catch (e) {}
+      try {
+        if (muts[1].target.id == "im_dialogs" && muts[1].addedNodes[0].classList[0] == "nim-dialog") {
           var el;
           for (var m of muts) {
             if (m.addedNodes.length > 0) {
@@ -584,9 +606,17 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
                 bttvForVKNS.replaceEmotes(el);
             }
           }
-        } else if (muts[0].target.classList[1] == "im-chat-input--fwd" && muts[0].addedNodes[1].classList[1] == "im-fwd_msg")
+          return;
+        }
+      } catch (e) {}
+      try {
+        if (muts[0].target.classList[1] == "im-chat-input--fwd" && muts[0].addedNodes[1].classList[1] == "im-fwd_msg") {
           bttvForVKNS.replaceEmotes(muts[0].addedNodes[1].lastElementChild);
-        else if (muts[0].target.className.substr(0,13) == "_im_msg_reply") {
+          return;
+        }
+      } catch (e) {}
+      try {
+        if (muts[0].target.className.substr(0,13) == "_im_msg_reply") {
           var container = muts[0].addedNodes[0].lastElementChild.lastElementChild;
           var child = container.childNodes[0];
           if (child.nodeName === "#text") {
@@ -594,9 +624,14 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
               container.insertBefore(n, child);
             child.remove();
           }
-        } else if (muts[0].target.className.substr(0,13) == "_im_msg_media") {
+          return;
+        }
+      } catch (e) {}
+      try {
+        if (muts[0].target.className.substr(0,13) == "_im_msg_media") {
           for (var el of muts[0].target.getElementsByClassName("im-mess--text wall_module"))
             bttvForVKNS.replaceEmotes(el);
+          return;
         }
       } catch (e) {}
     });
