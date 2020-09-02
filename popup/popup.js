@@ -36,11 +36,18 @@ bttvForVKPopupNS.handleSwitch = function() {
   bttvForVKPopupNS.settings[key] = value;
   chrome.storage.sync.set({"bttvForVK": bttvForVKPopupNS.settings}, function() {
     console.log("Saved", key, "to", value);
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      if (tabs[0].url.slice(0,15) === "https://vk.com/") {
-        chrome.tabs.sendMessage(tabs[0].id, {"bttvForVK": bttvForVKPopupNS.settings, "action": "update", "updated": key});
+    chrome.windows.getAll({populate:true},function(windows){
+      for (var win of windows) {
+        for (var tab of win.tabs) {
+          if (tab.url.slice(0,15) === "https://vk.com/")
+            chrome.tabs.sendMessage(tab.id, {"bttvForVK": bttvForVKPopupNS.settings, "action": "update", "updated": key});
+        }
       }
-    })
+    });
+    // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    //   if (tabs[0].url.slice(0,15) === "https://vk.com/")
+    //     chrome.tabs.sendMessage(tabs[0].id, {"bttvForVK": bttvForVKPopupNS.settings, "action": "update", "updated": key});
+    // });
   });
 }
 
