@@ -135,10 +135,9 @@ bttvForVKNS.updateCursorPlacement = function() {
   if (sel.rangeCount) {
     var range = sel.getRangeAt(0);
     if ((range.commonAncestorContainer.nodeName == "DIV" &&
-         range.commonAncestorContainer.parentNode == bttvForVKNS.input &&
-         (bttvForVKNS.onElement = true)) ||
-        (range.commonAncestorContainer.parentNode.parentNode == bttvForVKNS.input &&
-         !(bttvForVKNS.onElement = false))) {
+         range.commonAncestorContainer.parentNode == bttvForVKNS.input) ||
+        range.commonAncestorContainer.parentNode.parentNode == bttvForVKNS.input) {
+      bttvForVKNS.onElement = !(range.commonAncestorContainer.parentNode.parentNode == bttvForVKNS.input);
       bttvForVKNS.twoLayers = true;
       bttvForVKNS.cursorIndex = range.endOffset;
       var textNode = range.endContainer;
