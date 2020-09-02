@@ -1,18 +1,3 @@
-(function() {
-  var objects = document.getElementsByTagName('html');
-  for (var j = 0; j < objects.length; j++) {
-    var obj = objects[j];
-
-    var valStrH = obj.innerHTML.toString();
-    var valNewH = valStrH.replace(/__MSG_(\w+)__/g, function(match, v1) {
-      return v1 ? chrome.i18n.getMessage(v1) : "";
-    });
-
-    if(valNewH != valStrH)
-      obj.innerHTML = valNewH;
-  }
-}());
-
 var bttvForVKPopupNS = {
   currentTab: 1,
   pages: document.getElementsByClassName("bttv_page"),
@@ -30,6 +15,15 @@ var bttvForVKPopupNS = {
   },
   settings: {}
 };
+
+// for (var el of bttvForVKPopupNS.pages[1].getElementsByClassName("bttv--localize"))
+//   el.innerHTML = chrome.i18n.getMessage(el.innerHTML.slice(6, -2));
+for (var el of bttvForVKPopupNS.tabs)
+  el.innerHTML = chrome.i18n.getMessage(el.innerHTML.slice(6, -2));
+
+document.getElementById("bttv_bug-report").innerHTML = chrome.i18n.getMessage("bugReport");
+document.title = chrome.i18n.getMessage("extName");
+
 bttvForVKPopupNS.handleSwitch = function() {
   var key = this.name,
       value = this.checked;
@@ -44,10 +38,6 @@ bttvForVKPopupNS.handleSwitch = function() {
         }
       }
     });
-    // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    //   if (tabs[0].url.slice(0,15) === "https://vk.com/")
-    //     chrome.tabs.sendMessage(tabs[0].id, {"bttvForVK": bttvForVKPopupNS.settings, "action": "update", "updated": key});
-    // });
   });
 }
 
@@ -66,3 +56,12 @@ for (var tab of document.getElementsByClassName("bttv_nav-tab"))
 document.getElementById("bttv_close").addEventListener("click", function() {
   window.close();
 });
+
+window.onload = function() {
+  for (var page of bttvForVKPopupNS.pages) {
+    if (page == 1)
+      continue;
+    for (var el of page.getElementsByClassName("bttv--localize"))
+      el.innerHTML = chrome.i18n.getMessage(el.innerHTML.slice(6, -2));
+  }
+}
