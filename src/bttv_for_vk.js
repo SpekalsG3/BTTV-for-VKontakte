@@ -15,6 +15,7 @@ var bttvForVKNS = {
   activeYNode: 0,
   activeXNode: 0,
   cursorIndex: 0,
+  onElement: false,
   menuScrollOffset: 0,
   menuDraggingBar: false,
   menuStartDraggingPoint: 0,
@@ -130,27 +131,36 @@ bttvForVKNS.handleScrollBar = function(value, bybar = false) {
 }
 bttvForVKNS.updateCursorPlacement = function() {
   var sel = window.getSelection();
+  bttvForVKNS.onElement = false;
   if (sel.rangeCount) {
     var range = sel.getRangeAt(0);
-    if (range.commonAncestorContainer.parentNode == bttvForVKNS.input) {
+    if ((range.commonAncestorContainer.nodeName == "DIV" &&
+         range.commonAncestorContainer.parentNode == bttvForVKNS.input &&
+         (bttvForVKNS.onElement = true)) ||
+        (range.commonAncestorContainer.parentNode.parentNode == bttvForVKNS.input &&
+         !(bttvForVKNS.onElement = false))) {
+      bttvForVKNS.twoLayers = true;
+      bttvForVKNS.cursorIndex = range.endOffset;
+      var textNode = range.endContainer;
+      for (bttvForVKNS.activeYNode = 0; bttvForVKNS.activeYNode < bttvForVKNS.input.childNodes.length; bttvForVKNS.activeYNode++)
+        if (bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode] == (bttvForVKNS.onElement ? textNode : textNode.parentElement))
+          break;
+      if (bttvForVKNS.onElement)
+        bttvForVKNS.activeXNode = range.endOffset;
+      else
+        for (bttvForVKNS.activeXNode = 0; bttvForVKNS.activeXNode < bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes.length; bttvForVKNS.activeXNode++)
+          if (bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode] == textNode)
+            break;
+    } else if (range.commonAncestorContainer.parentNode == bttvForVKNS.input) {
+      // bttvForVKNS.onElement = range.commonAncestorContainer.nodeName != "#text";
       bttvForVKNS.twoLayers = false;
       bttvForVKNS.cursorIndex = range.endOffset;
       var textNode = range.endContainer;
       for (bttvForVKNS.activeYNode = 0; bttvForVKNS.activeYNode < textNode.parentElement.childNodes.length; bttvForVKNS.activeYNode++)
         if (textNode.parentElement.childNodes[bttvForVKNS.activeYNode] == textNode)
           break;
-    } else if (bttvForVKNS.input.contains(range.commonAncestorContainer.parentNode)) {
-      bttvForVKNS.twoLayers = true;
-      bttvForVKNS.cursorIndex = range.endOffset;
-      var textNode = range.endContainer;
-      for (bttvForVKNS.activeYNode = 0; bttvForVKNS.activeYNode < textNode.parentElement.parentElement.childNodes.length; bttvForVKNS.activeYNode++)
-        if (textNode.parentElement.parentElement.childNodes[bttvForVKNS.activeYNode] == textNode.parentElement)
-          break;
-      for (bttvForVKNS.activeXNode = 0; bttvForVKNS.activeXNode < textNode.parentElement.childNodes.length; bttvForVKNS.activeXNode++)
-        if (textNode.parentElement.childNodes[bttvForVKNS.activeXNode] == textNode)
-          break;
     } else
-      return 1;
+      bttvForVKNS.onElement = true;
   } else
     return 2;
   return 0;
@@ -158,13 +168,24 @@ bttvForVKNS.updateCursorPlacement = function() {
 bttvForVKNS.insertInEditable = function(name, replace = false) {
   var currentNodeText;
   if (bttvForVKNS.input.childNodes.length > 0) {
-    if (bttvForVKNS.twoLayers)
-      currentNodeText = bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].nodeValue;
-    else
-      currentNodeText = bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeValue;
+    if (bttvForVKNS.twoLayers) {
+      if (bttvForVKNS.onElement) {
+        // bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].insertAdjacentHTML((bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].nodeName !== "BR" && (++bttvForVKNS.activeXNode) ? "afterend" : "beforebegin"), " ");
+        bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].insertAdjacentHTML("beforebegin", " ");
+        currentNodeText = "";
+      } else
+        currentNodeText = bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].nodeValue;
+    } else {
+      if (bttvForVKNS.onElement) {
+        bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].insertAdjacentHTML("afterend", " ");
+        bttvForVKNS.activeYNode++;
+        currentNodeText = "";
+      } else
+        currentNodeText = bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeValue;
+    }
   } else {
     bttvForVKNS.input.append("");
-    currentNodeText  = "";
+    currentNodeText = "";
   }
   var spaceBefore = "";
   if (replace) {
@@ -173,9 +194,13 @@ bttvForVKNS.insertInEditable = function(name, replace = false) {
         break;
     }
   } else {
-    bttvForVKNS.wordStart = bttvForVKNS.cursorIndex;
-    if (bttvForVKNS.cursorIndex > 0 && currentNodeText[bttvForVKNS.cursorIndex-1])
-      spaceBefore = " ";
+    if (!bttvForVKNS.onElement)
+      bttvForVKNS.wordStart = 0;
+    else {
+      bttvForVKNS.wordStart = bttvForVKNS.cursorIndex;
+      if (bttvForVKNS.cursorIndex > 0 && currentNodeText[bttvForVKNS.cursorIndex-1] !== " ")
+        spaceBefore = " ";
+    }
   }
   if (currentNodeText === "" && !bttvForVKNS.activeYNode && !bttvForVKNS.activeXNode) {
     var msgBtn = document.getElementsByClassName("im-send-btn im-chat-input--send")[0];
@@ -201,19 +226,21 @@ bttvForVKNS.insertInEditable = function(name, replace = false) {
   sel.removeAllRanges();
   sel.addRange(range);
 }
+
 bttvForVKNS.predictedEmotes = Object.keys(bttvForVKNS.bttvEmotes);
 bttvForVKNS.predictErrorMsg = bttvForVKNS.createElement("div", {"className": "bttv_predcited-error--inner", "innerHTML": "No such emote"});
 bttvForVKNS.predictedMenu = bttvForVKNS.createElement("ul", {"className": "bttv_predicted-menu"});
+
 bttvForVKNS.predictEmote = function(e) {
   if (e.code == "Tab") {
     bttvForVKNS.predictedMenu.style.display = "none";
 
     if (!bttvForVKNS.lastPressedTab) {
-      if (bttvForVKNS.updateCursorPlacement())
+      if (bttvForVKNS.updateCursorPlacement() || bttvForVKNS.onElement)
         return;
     }
-    if (bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeName != "#text" && !bttvForVKNS.twoLayers)
-      return;
+    // if (bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeName != "#text" && !bttvForVKNS.twoLayers)
+    //   return;
 
     var currentNodeText;
     if (bttvForVKNS.twoLayers)
@@ -264,7 +291,7 @@ bttvForVKNS.predictEmote = function(e) {
     else if (!bttvForVKNS.updateCursorPlacement() && bttvForVKNS.settings.predictedMenu) {
       var currentNodeText;
       if (bttvForVKNS.input.childNodes.length > 0) {
-        if (bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeName != "#text" && !bttvForVKNS.twoLayers)
+        if (bttvForVKNS.onElement)
           return;
         if (bttvForVKNS.twoLayers)
           currentNodeText = bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].nodeValue;
@@ -519,9 +546,9 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
       if (void 0 !== e && e != "" && t !== undefined) {
         var i = document.createElement("div");
         i.innerHTML = e;
-        // load new messages
         do {
           try {
+            // load new messages
             if (i.firstElementChild.classList[0] === "im-mess-stack" || i.firstElementChild.classList[0] === "im-page--history-new-bar") { 
               for (var el of i.getElementsByClassName("im-mess--text wall_module"))
                 bttvForVKNS.replaceEmotes(el);
@@ -536,8 +563,8 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
               break;
             }
           } catch(e) {}
-          // new sent message in dialog tab
           try {
+            // new sent message in dialog tab
             if (t.classList[0] == "nim-dialog--preview") {
               bttvForVKNS.replaceEmotes(i);
               arguments[1] = i.innerHTML;
