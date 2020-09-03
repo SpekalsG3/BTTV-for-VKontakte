@@ -21,6 +21,7 @@ var bttvForVKNS = {
   menuStartDraggingPoint: 0,
   lastPointAtBorder: false,
   emotesMenuShown: false,
+  newInterface: false,
   settings: {}
 }
 
@@ -53,6 +54,7 @@ bttvForVKNS.parseEmotes = function(text) {
       l = text.length,
       nodes = [],
       emote = {};
+  var anyEmotes = false;
   for (var i = 0; i <= l; i++) {
     if (text[i] == ' ' || i == l) {
       if ((word in bttvForVKNS.bttvEmotes) &&
@@ -63,6 +65,7 @@ bttvForVKNS.parseEmotes = function(text) {
         nodes.push(bttvForVKNS.toImg(word));
         textBefore = "";
         word = "";
+        anyEmotes = true;
       }
 
       textBefore += (textBefore=='' ? '' : ' ') + word;
@@ -75,10 +78,12 @@ bttvForVKNS.parseEmotes = function(text) {
     nodes.push(document.createTextNode(textBefore));
     textBefore = "";
   }
-  return nodes;
+  // return nodes;
+  return [anyEmotes, nodes];
 }
 bttvForVKNS.replaceEmotes = function(node) {
   var tmpNode = false, newNode;
+  var anyEmotes = false;
   for (var s of node.childNodes) {
     if (s.classList != undefined && s.classList.length > 0) {
       if (s.classList[0] == "im-replied") {
@@ -92,18 +97,23 @@ bttvForVKNS.replaceEmotes = function(node) {
       }
     }
     if (s.nodeName == "#text") {
+      var emotes = bttvForVKNS.parseEmotes(s.nodeValue);
       if (tmpNode) {
-        for (var n of bttvForVKNS.parseEmotes(s.nodeValue))
+        // for (var n of bttvForVKNS.parseEmotes(s.nodeValue))
+        for (var n of emotes[1])
           newNode.insertBefore(n, s);
       }
       else {
-        for (var n of bttvForVKNS.parseEmotes(s.nodeValue))
+        // for (var n of bttvForVKNS.parseEmotes(s.nodeValue))
+        for (var n of emotes[1])
           node.insertBefore(n, s);
       }
       s.remove();
+      anyEmotes = anyEmotes || emotes[0];
     }
     tmpNode = false;
   }
+  return anyEmotes;
 }
 bttvForVKNS.handleScrollBar = function(value, bybar = false) {
   var flag = false;
@@ -439,6 +449,8 @@ bttvForVKNS.appendEmoteMenu = function() {
 }
 
 bttvForVKNS.visualizeEmotesOnPage = function() {
+  bttvForVKNS.newInterface = document.getElementsByClassName("im-page-wrapper")[0].children.length < 2;
+
   // All messages
   for (var el of document.getElementsByClassName("im-mess--text wall_module"))
     bttvForVKNS.replaceEmotes(el);
@@ -448,11 +460,16 @@ bttvForVKNS.visualizeEmotesOnPage = function() {
     bttvForVKNS.replaceEmotes(el);
 
   // All dialog previews
-  for (var el of document.getElementsByClassName("nim-dialog--preview")) {
-    if (el.lastElementChild !== null && el.lastElementChild.className == "nim-dialog--inner-text")
-      bttvForVKNS.replaceEmotes(el.lastElementChild);
-    else
-      bttvForVKNS.replaceEmotes(el);
+  for (var el of document.getElementsByClassName("nim-dialog--text-preview")) {
+    if (el.firstElementChild.lastElementChild !== null && el.firstElementChild.lastElementChild.className == "nim-dialog--inner-text") {
+      if (bttvForVKNS.replaceEmotes(el.firstElementChild.lastElementChild) && bttvForVKNS.newInterface)
+        el.parentElement.classList.add("bttv_dialog-with-emote");
+        // el.previousElementSibling.style.marginBottom = "3px";
+    } else {
+      if (bttvForVKNS.replaceEmotes(el.firstElementChild))
+        el.parentElement.classList.add("bttv_dialog-with-emote");
+        // el.previousElementSibling.style.marginBottom = "3px";
+    }
   }
 
   if (bttvForVKNS.settings.predictedMenu)
@@ -556,8 +573,15 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
             }
           } catch (e) {}
           try {
+            // new message with avatar
             if (i.lastElementChild.className == "nim-dialog--inner-text") {
-              bttvForVKNS.replaceEmotes(i.children[1]);
+              // console.log(t);
+              if (bttvForVKNS.replaceEmotes(i.children[1]) && bttvForVKNS.newInterface)
+                t.parentElement.parentElement.classList.add("bttv_dialog-with-emote");
+                // t.parentElement.previousElementSibling.style.marginBottom = "3px";
+              else
+                t.parentElement.parentElement.classList.remove("bttv_dialog-with-emote");
+                // t.parentElement.previousElementSibling.style.marginBottom = "7px";
               arguments[1] = i.innerHTML;
               break;
             }
@@ -565,7 +589,14 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
           try {
             // new sent message in dialog tab
             if (t.classList[0] == "nim-dialog--preview") {
-              bttvForVKNS.replaceEmotes(i);
+              // bttvForVKNS.replaceEmotes(i);
+              if (bttvForVKNS.replaceEmotes(i)) {
+                if (bttvForVKNS.newInterface || t.firstElementChild === null || t.firstElementChild.classList[0] !== "nim-dialog--preview")
+                  // t.parentElement.previousElementSibling.style.marginBottom = "3px";
+                  t.parentElement.parentElement.classList.add("bttv_dialog-with-emote");
+              } else
+                  t.parentElement.parentElement.classList.remove("bttv_dialog-with-emote");
+                // t.parentElement.previousElementSibling.style.marginBottom = "7px";
               arguments[1] = i.innerHTML;
               break;
             }
@@ -616,6 +647,7 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
     bttvForVKNS.imObserver = new (window.MutationObserver || window.WebKitMutationObserver)(function(muts, o) {
       try {
         if (muts[0].target.id == "wrap3" && muts[0].addedNodes[0].id == "wrap2" && muts[0].addedNodes[0].firstElementChild.firstElementChild.firstElementChild.classList[0] == "im-page-wrapper") {
+          // console.log("opened messages");
           bttvForVKNS.visualizeEmotesOnPage();
           return;
         }
@@ -662,7 +694,7 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
       } catch (e) {}
     });
 
-    bttvForVKNS.imObserver.observe(document.getElementById("wrap3"), {
+    bttvForVKNS.imObserver.observe(document.getElementById("page_body"), {
       subtree: true,
       attributes: false,
       childList: true

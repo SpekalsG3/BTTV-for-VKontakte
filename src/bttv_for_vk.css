@@ -18,9 +18,9 @@
 }
 
 .nim-dialog.nim-dialog_classic .nim-dialog--who+.nim-dialog--inner-text>.bttv_img-wrapper {
-  height: 14px;
+  height: 15px;
+  top: -6px;
   vertical-align: middle;
-  top: -8px;
 }
 
 .bttv_emote-tooltip {
@@ -239,4 +239,11 @@
 
 .nim-dialog--preview .bttv_img-emote {
   height: 26px;
+}
+
+.bttv_dialog-with-emote .nim-dialog--name {
+  margin-bottom: 3px !important;
+}
+.bttv_dialog-with-emote .nim-dialog--unread_container {
+  margin-top: -18px !important;
 }
