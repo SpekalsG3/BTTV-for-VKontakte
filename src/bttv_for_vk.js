@@ -157,16 +157,19 @@ bttvForVKNS.updateCursorPlacement = function() {
         for (bttvForVKNS.activeXNode = 0; bttvForVKNS.activeXNode < bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes.length; bttvForVKNS.activeXNode++)
           if (bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode] == textNode)
             break;
-    } else if (range.commonAncestorContainer.parentNode == bttvForVKNS.input) {
-      // bttvForVKNS.onElement = range.commonAncestorContainer.nodeName != "#text";
+    } else if (range.commonAncestorContainer.parentNode == bttvForVKNS.input || range.commonAncestorContainer == bttvForVKNS.input) {
+      bttvForVKNS.onElement = range.commonAncestorContainer.nodeName != "#text";
       bttvForVKNS.twoLayers = false;
       bttvForVKNS.cursorIndex = range.endOffset;
       var textNode = range.endContainer;
-      for (bttvForVKNS.activeYNode = 0; bttvForVKNS.activeYNode < textNode.parentElement.childNodes.length; bttvForVKNS.activeYNode++)
-        if (textNode.parentElement.childNodes[bttvForVKNS.activeYNode] == textNode)
-          break;
+      if (bttvForVKNS.onElement)
+        bttvForVKNS.activeYNode = range.endOffset;
+      else
+        for (bttvForVKNS.activeYNode = 0; bttvForVKNS.activeYNode < textNode.parentElement.childNodes.length; bttvForVKNS.activeYNode++)
+          if (textNode.parentElement.childNodes[bttvForVKNS.activeYNode] == textNode)
+            break;
     } else
-      bttvForVKNS.onElement = true;
+      return 1;
   } else
     return 2;
   return 0;
@@ -182,8 +185,11 @@ bttvForVKNS.insertInEditable = function(name, replace = false) {
         currentNodeText = bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].nodeValue;
     } else {
       if (bttvForVKNS.onElement) {
-        bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].insertAdjacentHTML("afterend", " ");
-        bttvForVKNS.activeYNode++;
+        if (bttvForVKNS.activeYNode < bttvForVKNS.input.childNodes.length)
+          bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].insertAdjacentHTML("beforebegin", " ");
+        else
+          bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode-1].insertAdjacentHTML("afterend", " ");
+        // bttvForVKNS.activeYNode++;
         currentNodeText = "";
       } else
         currentNodeText = bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeValue;
@@ -199,7 +205,7 @@ bttvForVKNS.insertInEditable = function(name, replace = false) {
         break;
     }
   } else {
-    if (!bttvForVKNS.onElement)
+    if (bttvForVKNS.onElement)
       bttvForVKNS.wordStart = 0;
     else {
       bttvForVKNS.wordStart = bttvForVKNS.cursorIndex;
@@ -598,7 +604,6 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
       if (t == "im_replied_message") {
         var i = document.createElement("div");
         var emotes = bttvForVKNS.parseEmotes(e.text);
-        console.log(e);
         for (var n of emotes[1])
           i.appendChild(n);
         e.text = (emotes[0] ? i.innerHTML : i.textContent);
