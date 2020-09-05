@@ -19,8 +19,7 @@
     "js": ["src/index.js"]
   }],
   "permissions": [
-    "storage",
-    "tabs"
+    "storage"
   ],
   "web_accessible_resources": [
     "src/bttv_for_vk.js",
