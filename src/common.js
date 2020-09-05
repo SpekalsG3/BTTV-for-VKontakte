@@ -1,5 +1,5 @@
 chrome.runtime.onInstalled.addListener(function(details){
-  if(details.reason == "install") { // install
+  if (details.reason == "install" || details.reason == "update") { // install
     chrome.storage.sync.set({
       bttvForVK: {
         settings: {
