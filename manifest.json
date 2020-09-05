@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "__MSG_extName__",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "default_locale": "en",
   "description": "__MSG_extDesc__",
   "icons": {
@@ -13,15 +13,6 @@
     "scripts": ["src/common.js"],
     "persistent": false
   },
-  // "browser_action": {
-  //   "default_icon": {
-  //     "64": "icons/64px.png",
-  //     "128": "icons/128px.png",
-  //     "512": "icons/512px.png"
-  //   },
-  //   "default_title": "__MSG_extName__",
-  //   "default_popup": "popup/popup.html"
-  // },
   "content_scripts": [{
     "matches": ["*://vk.com/*"],
     "css": ["src/bttv_for_vk.css"],
