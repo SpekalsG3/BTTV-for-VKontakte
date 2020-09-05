@@ -7,6 +7,10 @@
     "message": "Это отдельная версия BTTV для ВКонтакте.",
     "description": "Описание расширения."
   },
+  "popupWidth": {
+    "message": "650",
+    "description": "Ширина русской локализацией"
+  },
   "navAbout": {
     "message": "Описание",
     "description": "Название вкладки с описанием."

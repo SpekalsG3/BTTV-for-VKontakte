@@ -7,6 +7,10 @@
     "message": "This is an unrelated version of BTTV for VKontakte.",
     "description": "Extension description."
   },
+  "popupWidth": {
+    "message": "480",
+    "description": "Width with english localization"
+  },
   "navAbout": {
     "message": "About",
     "description": "Popup about tab title."

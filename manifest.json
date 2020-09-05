@@ -13,22 +13,27 @@
     "scripts": ["src/common.js"],
     "persistent": false
   },
-  "browser_action": {
-    "default_icon": {
-      "64": "icons/64px.png",
-      "128": "icons/128px.png",
-      "512": "icons/512px.png"
-    },
-    "default_title": "BTTV for VKontakte",
-    "default_popup": "popup/popup.html"
-  },
+  // "browser_action": {
+  //   "default_icon": {
+  //     "64": "icons/64px.png",
+  //     "128": "icons/128px.png",
+  //     "512": "icons/512px.png"
+  //   },
+  //   "default_title": "__MSG_extName__",
+  //   "default_popup": "popup/popup.html"
+  // },
   "content_scripts": [{
     "matches": ["*://vk.com/*"],
     "css": ["src/bttv_for_vk.css"],
     "js": ["src/index.js"]
   }],
   "permissions": [
-    "storage"
+    "storage",
+    "tabs"
   ],
-  "web_accessible_resources": ["src/bttv_for_vk.js"]
+  "web_accessible_resources": [
+    "src/bttv_for_vk.js",
+    "icons/mascot.png",
+    "icons/settings_logo.png"
+  ]
 }

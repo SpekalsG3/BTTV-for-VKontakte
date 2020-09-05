@@ -189,7 +189,6 @@ bttvForVKNS.insertInEditable = function(name, replace = false) {
           bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].insertAdjacentHTML("beforebegin", " ");
         else
           bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode-1].insertAdjacentHTML("afterend", " ");
-        // bttvForVKNS.activeYNode++;
         currentNodeText = "";
       } else
         currentNodeText = bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeValue;
@@ -506,223 +505,449 @@ if (window.getSelection) {
 }
 
 window.addEventListener("bttvForVKSettingsChange", function(e) {
-  bttvForVKNS.settings = e.detail.bttvForVK;
-  if (e.detail.action === "load") {
-    bttvForVKNS.fillEmotesMenu();
-    document.body.appendChild(bttvForVKNS.emotesMenu);
+  if (e.detail.bttvForVKAction != "load")
+    return;
 
-    bttvForVKNS.emotesMenuSizes = {
-      height: bttvForVKNS.emotesMenu.clientHeight,
-      width: bttvForVKNS.emotesMenu.clientWidth
-    };
-    bttvForVKNS.scrollHeight = bttvForVKNS.emoteScrollable.scrollHeight;
-    bttvForVKNS.scrollareaHeight = bttvForVKNS.emotesMenuSizes.height;
-    bttvForVKNS.scrollSpace = bttvForVKNS.scrollHeight-bttvForVKNS.scrollareaHeight;
-    bttvForVKNS.scrollbar.style.height = bttvForVKNS.scrollareaHeight*bttvForVKNS.scrollareaHeight/bttvForVKNS.scrollHeight + "px";
+  bttvForVKNS.settings = e.detail.bttvForVK.settings;
+  bttvForVKNS.localization = e.detail.bttvForVK.localization;
+  bttvForVKNS.urls = e.detail.bttvForVK.urls;
 
-    bttvForVKNS.emotesMenu.style.display = "none";
+  bttvForVKNS.tabs = [
+    bttvForVKNS.createElement("div", {
+      className: "bttv_nav-tab",
+      innerHTML: bttvForVKNS.localization.navAbout
+    }),
+    bttvForVKNS.createElement("div", {
+      className: "bttv_nav-tab bttv_nav-tab--current",
+      innerHTML: bttvForVKNS.localization.navSettings
+    }),
+    bttvForVKNS.createElement("div", {
+      className: "bttv_nav-tab",
+      innerHTML: bttvForVKNS.localization.navPrivacy
+    }),
+    bttvForVKNS.createElement("div", {
+      className: "bttv_nav-tab",
+      innerHTML: bttvForVKNS.localization.navDonation
+    })
+  ];
 
-    bttvForVKNS.vk_se = window.se;
-    window.se = function(t) {
-      var i = document.createElement("div");
-      i.innerHTML = t;
-      try {
-        var name = i.firstElementChild.classList[0];
-        if (name == "nim-dialog" || name == "im-mess") {
-          var msgBody = i.firstElementChild.firstElementChild;
-          if (msgBody !== null)
-            bttvForVKNS.replaceEmotes(msgBody);
-          msgBody = i.firstElementChild.lastElementChild.firstElementChild;
-          if (msgBody !== null) {
-            msgBody = msgBody.children[5].firstElementChild;
-            if (msgBody.lastElementChild !== null && msgBody.lastElementChild.className == "nim-dialog--inner-text")
-              bttvForVKNS.replaceEmotes(msgBody.lastElementChild);
-            else
-              bttvForVKNS.replaceEmotes(msgBody);
-          }
-        }
-      } catch (e) {}
-      return bttvForVKNS.vk_se(i.innerHTML);
-    }
+  var createCheckbox = function(name, desc, inputName) {
+    return bttvForVKNS.createElement("div", {className: "bttv_page-option"}, [
+      bttvForVKNS.createElement("div", {className: "bttv_page-option--about"}, [
+        bttvForVKNS.createElement("span", {
+          className: "bttv_page-option--name",
+          innerHTML: bttvForVKNS.localization[name]
+        }),
+        bttvForVKNS.createElement("span", {
+          className: "bttv_page-option--desc",
+          innerHTML: bttvForVKNS.localization[desc]
+        })
+      ]),
+      bttvForVKNS.createElement("div", {className: "bttv_switch"}, [
+        bttvForVKNS.createElement("label", {}, [
+          bttvForVKNS.createElement("input", {
+            type: "checkbox",
+            name: inputName
+          }),
+          bttvForVKNS.createElement("div", {className: "bttv_switch-box bttv_switch-box--off"}, [
+            bttvForVKNS.createElement("div", {className: "bttv_switch-mark"}),
+            bttvForVKNS.createElement("span", {
+              className: "bttv_switch-span bttv_switch-span--off",
+              innerHTML: "off"
+            }),
+            bttvForVKNS.createElement("span", {
+              className: "bttv_switch-span bttv_switch-span--on",
+              innerHTML: "on"
+            })
+          ])
+        ])
+      ])
+    ])
+  }
+  bttvForVKNS.checkboxes = [
+    createCheckbox("settingsGifsName", "settingsGifsDesc", "showGifs"),
+    createCheckbox("settingsMenuName", "settingsMenuDesc", "emoteMenu"),
+    createCheckbox("settingsFrankerzName", "settingsFrankerzDesc", "frankerZEmotes"),
+    createCheckbox("settingsPredictedName", "settingsPredictedDesc", "predictedMenu")
+  ];
 
-    bttvForVKNS.vk_sech = window.sech;
-    window.sech = function(t) {
-      var i = document.createElement("div");
-      i.innerHTML = t;
-      for (var el of i.getElementsByClassName("im-mess--text wall_module"))
-        bttvForVKNS.replaceEmotes(el);
-      return bttvForVKNS.vk_sech(i.innerHTML);
-    }
+  bttvForVKNS.pages = [
+    bttvForVKNS.createElement("div", {
+      className: "bttv_page bttv_page--info",
+      style: "z-index: 1; opacity: 0"
+    }, [
+      bttvForVKNS.createElement("a", {
+        target: "_blank",
+        rel: "noopener noreferrer",
+        href: "https://betterttv.com/"
+      }, [
+        bttvForVKNS.createElement("div", {className: "bttv_page-copyright"}, [
+          bttvForVKNS.createElement("img", {
+            className: "bttv_page-logo",
+            src: bttvForVKNS.urls.mascot
+          }),
+          bttvForVKNS.createElement("h1", {
+            innerHTML: bttvForVKNS.localization.aboutBttvLink
+          })
+        ])
+      ]),
+      bttvForVKNS.createElement("h2", {
+        innerHTML: bttvForVKNS.localization.aboutText
+      }, [
+        bttvForVKNS.createElement("a", {
+          target: "_blank",
+          rel: "noopener noreferrer",
+          href: "https://github.com/SpekalsG3/BTTV-for-VKontakte/pulls",
+          innerHTML: bttvForVKNS.localization.aboutGithubLink
+        })
+      ])
+    ]),
+    bttvForVKNS.createElement("div", {
+      className: "bttv_page",
+      style: "z-index: 2; opacity: 1;"
+    }, bttvForVKNS.checkboxes),
+    bttvForVKNS.createElement("div", {
+      className: "bttv_page bttv_page--info",
+      style: "z-index: 1; opacity: 0"
+    }, [
+      bttvForVKNS.createElement("h2", {innerHTML: bttvForVKNS.localization.privacyPolicy})
+    ]),
+    bttvForVKNS.createElement("div", {
+      className: "bttv_page bttv_page--donation",
+      style: "z-index: 1; opacity: 0"
+    }, [
+      bttvForVKNS.createElement("h2", {
+        innerHTML: bttvForVKNS.localization.donationText1 + "<br>" + bttvForVKNS.localization.donationText2
+      }),
+      bttvForVKNS.createElement("div", {}, [
+        bttvForVKNS.createElement("iframe", {
+          src: "https://money.yandex.ru/quickpay/shop-widget?writer=seller&targets=%D0%9F%D0%BE%D0%B6%D0%B5%D1%80%D1%82%D0%B2%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5&targets-hint=&default-sum=&button-text=14&payment-type-choice=on&comment=on&hint=%D0%92%D0%B0%D1%88%D0%B5%20%D0%BF%D0%BE%D0%B6%D0%B5%D0%BB%D0%B0%D0%BD%D0%B8%D0%B5&successURL=&quickpay=shop&account=410014253082990",
+          width: "423",
+          height: "313",
+          frameBorder: "0",
+          // allowtransparency: "true"
+          scrolling: "no"
+        })
+      ])
+    ])
+  ];
 
-    bttvForVKNS.vk_val = window.val;
-    window.val = function(t) {
-      var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : void 0;
-      if (void 0 !== e && e != "" && t !== undefined) {
-        var i = document.createElement("div");
-        i.innerHTML = e;
-        do {
-          try {
-            // load new messages
-            if (i.firstElementChild.classList[0] === "im-mess-stack" || i.firstElementChild.classList[0] === "im-page--history-new-bar") { 
-              for (var el of i.getElementsByClassName("im-mess--text wall_module"))
-                bttvForVKNS.replaceEmotes(el);
-              arguments[1] = i.innerHTML;
-              break;
-            }
-          } catch (e) {}
-          try {
-            // new message with avatar
-            if (i.lastElementChild.className == "nim-dialog--inner-text") {
-              if (bttvForVKNS.replaceEmotes(i.children[1]) && bttvForVKNS.newInterface)
-                t.parentElement.parentElement.classList.add("bttv_dialog-with-emote");
-              else
-                t.parentElement.parentElement.classList.remove("bttv_dialog-with-emote");
-              arguments[1] = i.innerHTML;
-              break;
-            }
-          } catch(e) {}
-          try {
-            // new sent message in dialog tab
-            if (t.classList[0] == "nim-dialog--preview") {
-              if (bttvForVKNS.replaceEmotes(i)) {
-                if (bttvForVKNS.newInterface || t.firstElementChild === null || t.firstElementChild.classList[0] !== "nim-dialog--preview")
-                  t.parentElement.parentElement.classList.add("bttv_dialog-with-emote");
-              } else
-                t.parentElement.parentElement.classList.remove("bttv_dialog-with-emote");
-              arguments[1] = i.innerHTML;
-              break;
-            }
-          } catch(e) {}
-        } while (false);
-      }
-      return bttvForVKNS.vk_val(...arguments);
-    }
+  var popupCloseBtn = bttvForVKNS.createElement("div", {
+    className: "bttv_close",
+    innerHTML: "&times;"
+  });
 
-    // Attached reply
-    bttvForVKNS.vk_getTemplate = window.getTemplate;
-    window.getTemplate = function(t, e) {
-      if (t == "im_replied_message") {
-        var i = document.createElement("div");
-        var emotes = bttvForVKNS.parseEmotes(e.text);
-        for (var n of emotes[1])
-          i.appendChild(n);
-        e.text = (emotes[0] ? i.innerHTML : i.textContent);
-      }
-      return bttvForVKNS.vk_getTemplate(t, e);
-    }
+  bttvForVKNS.popup = bttvForVKNS.createElement("div", {className: "bttv_popup"}, [
+    bttvForVKNS.createElement("header", {className: "bttv_popup-header"}, [
+      bttvForVKNS.createElement("div", {className: "bttv_popup-logo"}, [
+        bttvForVKNS.createElement("img", {src: bttvForVKNS.urls.settingsLogo})
+      ]),
+      bttvForVKNS.createElement("nav", {className: "bttv_nav"}, bttvForVKNS.tabs),
+      popupCloseBtn
+    ]),
+    bttvForVKNS.createElement("div", {className: "bttv_pages"}, bttvForVKNS.pages),
+    bttvForVKNS.createElement("div", {className: "bttv_popup-footer"}, [
+      bttvForVKNS.createElement("a", {
+        target: "_blank",
+        rel: "noopener noreferrer",
+        href: "https://github.com/SpekalsG3/BTTV-for-VKontakte/issues",
+        innerHTML: bttvForVKNS.localization.bugReport
+      })
+    ])
+  ]);
 
-    if (document.getElementsByClassName("im-page-wrapper").length > 0)
-      bttvForVKNS.visualizeEmotesOnPage();
-
-    // Starred and forwarded tab
-    bttvForVKNS.boxLayerObserver = new (window.MutationObserver || window.WebKitMutationObserver)(function(muts, o) {
-      try {
-        if (muts[1].addedNodes[0].className == "im_single_log_wrap") {
-          for (var el of muts[1].addedNodes[0].getElementsByClassName("im-mess--text wall_module"))
-            bttvForVKNS.replaceEmotes(el);
-          return;
-        }
-      } catch (e) {}
-      try {
-        if (muts[0].addedNodes[0].classList[1] == "im-important-box") {
-          for (var el of muts[0].addedNodes[0].getElementsByClassName("im-mess--text wall_module"))
-            bttvForVKNS.replaceEmotes(el);
-        }
-      } catch (e) {}
-    });
-
-    bttvForVKNS.boxLayerObserver.observe(document.getElementById("box_layer"), {
-      subtree: true,
-      attributes: false,
-      childList: true
-    });
-
-    bttvForVKNS.imObserver = new (window.MutationObserver || window.WebKitMutationObserver)(function(muts, o) {
-      try {
-        if (muts[0].target.id == "wrap3" && muts[0].addedNodes[0].id == "wrap2" && muts[0].addedNodes[0].firstElementChild.firstElementChild.firstElementChild.classList[0] == "im-page-wrapper") {
-          bttvForVKNS.visualizeEmotesOnPage();
-          return;
-        }
-      } catch (e) {}
-      try {
-        if (muts[1].target.id == "im_dialogs" && muts[1].addedNodes[0].classList[0] == "nim-dialog") {
-          var el;
-          for (var m of muts) {
-            if (m.addedNodes.length > 0) {
-              el = m.addedNodes[0].lastElementChild.firstElementChild.children[5].firstElementChild;
-              if (el.lastElementChild !== null && el.lastElementChild.className == "nim-dialog--inner-text")
-                bttvForVKNS.replaceEmotes(el.lastElementChild);
-              else
-                bttvForVKNS.replaceEmotes(el);
-            }
-          }
-          return;
-        }
-      } catch (e) {}
-      try {
-        if (muts[0].target.classList[1] == "im-chat-input--fwd" && muts[0].addedNodes[1].classList[1] == "im-fwd_msg") {
-          bttvForVKNS.replaceEmotes(muts[0].addedNodes[1].lastElementChild);
-          return;
-        }
-      } catch (e) {}
-      try {
-        if (muts[0].target.className.substr(0,13) == "_im_msg_reply") {
-          var container = muts[0].addedNodes[0].lastElementChild.lastElementChild;
-          var child = container.childNodes[0];
-          if (child.nodeName === "#text") {
-            for (var n of bttvForVKNS.parseEmotes(child.nodeValue)[1])
-              container.insertBefore(n, child);
-            child.remove();
-          }
-          return;
-        }
-      } catch (e) {}
-      try {
-        if (muts[0].target.className.substr(0,13) == "_im_msg_media") {
-          for (var el of muts[0].target.getElementsByClassName("im-mess--text wall_module"))
-            bttvForVKNS.replaceEmotes(el);
-          return;
-        }
-      } catch (e) {}
-    });
-
-    bttvForVKNS.imObserver.observe(document.getElementById("page_body"), {
-      subtree: true,
-      attributes: false,
-      childList: true
-    });
-
-    window.addEventListener("mouseup", function(e) {
-      e.preventDefault();
-      bttvForVKNS.scrollbar.style.webkitTransition = ".2s";
-      bttvForVKNS.scrollbar.style.transition = ".2s";
-      bttvForVKNS.menuDraggingBar = false;
-    });
-    window.addEventListener("mousemove", function(e) {
-      if (bttvForVKNS.menuDraggingBar) {
-        bttvForVKNS.handleScrollBar(bttvForVKNS.menuScrollOffset+e.pageY-bttvForVKNS.menuStartDraggingPoint, true);
-        bttvForVKNS.menuStartDraggingPoint = e.pageY;
-      }
-    });
-  } else if (e.detail.action === "update") {
-    if (e.detail.updated === "predictedMenu") {
-      if (bttvForVKNS.settings.predictedMenu)
+  bttvForVKNS.handleSwitch = function() {
+    var key = this.name,
+        value = this.checked;
+    bttvForVKNS.settings[key] = value;
+    if (key === "predictedMenu") {
+      if (value)
         bttvForVKNS.appendPredictedMenu();
       else
         document.getElementsByClassName("im-page--chat-input")[0].removeChild(bttvForVKNS.predictedMenu);
-    } else if (e.detail.updated === "emoteMenu") {
-      if (bttvForVKNS.settings.emoteMenu)
+    } else if (key === "emoteMenu") {
+      if (value)
         bttvForVKNS.appendEmoteMenu();
       else {
         document.getElementsByClassName("im_chat-input--buttons")[0].removeChild(bttvForVKNS.emoteButtonWrapper);
         bttvForVKNS.emotesMenu.style.display = "none";
-        bttvForVKNS.emoteButtonImage.style.webkitFilter = "grayscale(100%)";
-        bttvForVKNS.emoteButtonImage.style.filter = "grayscale(100%)";
+        // bttvForVKNS.emoteButtonImage.style.webkitFilter = "grayscale(100%)";
+        // bttvForVKNS.emoteButtonImage.style.filter = "grayscale(100%)";
         bttvForVKNS.emotesMenuShown = false;
       }
-    } else if (e.detail.updated === "showGifs")
+    } else if (key === "showGifs")
       bttvForVKNS.fillEmotesMenu();
+    window.dispatchEvent(new CustomEvent("bttvForVKSettingsChange", {
+      detail: {
+        bttvForVK: {
+          settings: bttvForVKNS.settings
+        },
+        bttvForVKAction: "update"
+      }
+    }));
   }
+
+  for (var box of bttvForVKNS.checkboxes) {
+    var input = box.lastElementChild.firstElementChild.firstElementChild;
+    input.checked = bttvForVKNS.settings[input.name];
+    input.addEventListener("change", bttvForVKNS.handleSwitch);
+  }
+
+  bttvForVKNS.currentTab = 1;
+  bttvForVKNS.handleTabClick = function() {
+    bttvForVKNS.pages[bttvForVKNS.currentTab].style.opacity = 0;
+    bttvForVKNS.pages[bttvForVKNS.currentTab].style.zIndex = 1;
+    bttvForVKNS.tabs[bttvForVKNS.currentTab].classList.remove("bttv_nav-tab--current");
+    for (bttvForVKNS.currentTab = 0; bttvForVKNS.currentTab < bttvForVKNS.tabs.length; bttvForVKNS.currentTab++)
+      if (bttvForVKNS.tabs[bttvForVKNS.currentTab] == this)
+        break;
+    bttvForVKNS.pages[bttvForVKNS.currentTab].style.opacity = 1;
+    bttvForVKNS.pages[bttvForVKNS.currentTab].style.zIndex = 2;
+    bttvForVKNS.tabs[bttvForVKNS.currentTab].classList.add("bttv_nav-tab--current");
+  }
+
+  for (var tab of bttvForVKNS.tabs)
+    tab.addEventListener("click", bttvForVKNS.handleTabClick);
+
+  popupCloseBtn.addEventListener("click", function() {
+    bttvForVKNS.popup.style.height = "0";
+  });
+
+  bttvForVKNS.fillEmotesMenu();
+  document.body.appendChild(bttvForVKNS.emotesMenu);
+  bttvForVKNS.localization.popupWidth = parseInt(bttvForVKNS.localization.popupWidth);
+  bttvForVKNS.popup.style.width = bttvForVKNS.localization.popupWidth + "px";
+  bttvForVKNS.popup.style.marginLeft = -bttvForVKNS.localization.popupWidth/2 + "px";
+  document.body.appendChild(bttvForVKNS.popup);
+
+  bttvForVKNS.emotesMenuSizes = {
+    height: bttvForVKNS.emotesMenu.clientHeight,
+    width: bttvForVKNS.emotesMenu.clientWidth
+  };
+  bttvForVKNS.scrollHeight = bttvForVKNS.emoteScrollable.scrollHeight;
+  bttvForVKNS.scrollareaHeight = bttvForVKNS.emotesMenuSizes.height;
+  bttvForVKNS.scrollSpace = bttvForVKNS.scrollHeight-bttvForVKNS.scrollareaHeight;
+  bttvForVKNS.scrollbar.style.height = bttvForVKNS.scrollareaHeight*bttvForVKNS.scrollareaHeight/bttvForVKNS.scrollHeight + "px";
+
+  bttvForVKNS.emotesMenu.style.display = "none";
+
+  var vkMenu = document.getElementById("top_profile_menu");
+  var settingsBtn = bttvForVKNS.createElement("div", {
+    className: "top_profile_mrow",
+    innerHTML: "BTTV Settings"
+  });
+  settingsBtn.addEventListener("click", function() {
+    bttvForVKNS.popup.style.height = "472px";
+  });
+  vkMenu.insertBefore(settingsBtn, vkMenu.lastElementChild);
+  vkMenu.insertBefore(bttvForVKNS.createElement("div", {className: "top_profile_sep"}), vkMenu.lastElementChild);
+
+  bttvForVKNS.vk_se = window.se;
+  window.se = function(t) {
+    var i = document.createElement("div");
+    i.innerHTML = t;
+    try {
+      var name = i.firstElementChild.classList[0];
+      if (name == "nim-dialog" || name == "im-mess") {
+        var msgBody = i.firstElementChild.firstElementChild;
+        if (msgBody !== null)
+          bttvForVKNS.replaceEmotes(msgBody);
+        msgBody = i.firstElementChild.lastElementChild.firstElementChild;
+        if (msgBody !== null) {
+          msgBody = msgBody.children[5].firstElementChild;
+          if (msgBody.lastElementChild !== null && msgBody.lastElementChild.className == "nim-dialog--inner-text")
+            bttvForVKNS.replaceEmotes(msgBody.lastElementChild);
+          else
+            bttvForVKNS.replaceEmotes(msgBody);
+        }
+      }
+    } catch (e) {}
+    return bttvForVKNS.vk_se(i.innerHTML);
+  }
+
+  bttvForVKNS.vk_sech = window.sech;
+  window.sech = function(t) {
+    var i = document.createElement("div");
+    i.innerHTML = t;
+    for (var el of i.getElementsByClassName("im-mess--text wall_module"))
+      bttvForVKNS.replaceEmotes(el);
+    return bttvForVKNS.vk_sech(i.innerHTML);
+  }
+
+  bttvForVKNS.vk_val = window.val;
+  window.val = function(t) {
+    var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : void 0;
+    if (void 0 !== e && e != "" && t !== undefined) {
+      var i = document.createElement("div");
+      i.innerHTML = e;
+      do {
+        try {
+          // load new messages
+          if (i.firstElementChild.classList[0] === "im-mess-stack" || i.firstElementChild.classList[0] === "im-page--history-new-bar") { 
+            for (var el of i.getElementsByClassName("im-mess--text wall_module"))
+              bttvForVKNS.replaceEmotes(el);
+            arguments[1] = i.innerHTML;
+            break;
+          }
+        } catch (e) {}
+        try {
+          // new message with avatar
+          if (i.lastElementChild.className == "nim-dialog--inner-text") {
+            if (bttvForVKNS.replaceEmotes(i.children[1]) && bttvForVKNS.newInterface)
+              t.parentElement.parentElement.classList.add("bttv_dialog-with-emote");
+            else
+              t.parentElement.parentElement.classList.remove("bttv_dialog-with-emote");
+            arguments[1] = i.innerHTML;
+            break;
+          }
+        } catch(e) {}
+        try {
+          // new sent message in dialog tab
+          if (t.classList[0] == "nim-dialog--preview") {
+            if (bttvForVKNS.replaceEmotes(i)) {
+              if (bttvForVKNS.newInterface || t.firstElementChild === null || t.firstElementChild.classList[0] !== "nim-dialog--preview")
+                t.parentElement.parentElement.classList.add("bttv_dialog-with-emote");
+            } else
+              t.parentElement.parentElement.classList.remove("bttv_dialog-with-emote");
+            arguments[1] = i.innerHTML;
+            break;
+          }
+        } catch(e) {}
+      } while (false);
+    }
+    return bttvForVKNS.vk_val(...arguments);
+  }
+
+  // Attached reply
+  bttvForVKNS.vk_getTemplate = window.getTemplate;
+  window.getTemplate = function(t, e) {
+    if (t == "im_replied_message") {
+      var i = document.createElement("div");
+      var emotes = bttvForVKNS.parseEmotes(e.text);
+      for (var n of emotes[1])
+        i.appendChild(n);
+      e.text = (emotes[0] ? i.innerHTML : i.textContent);
+    }
+    return bttvForVKNS.vk_getTemplate(t, e);
+  }
+
+  if (document.getElementsByClassName("im-page-wrapper").length > 0)
+    bttvForVKNS.visualizeEmotesOnPage();
+
+  // Starred and forwarded tab
+  bttvForVKNS.boxLayerObserver = new (window.MutationObserver || window.WebKitMutationObserver)(function(muts, o) {
+    try {
+      if (muts[1].addedNodes[0].className == "im_single_log_wrap") {
+        for (var el of muts[1].addedNodes[0].getElementsByClassName("im-mess--text wall_module"))
+          bttvForVKNS.replaceEmotes(el);
+        return;
+      }
+    } catch (e) {}
+    try {
+      if (muts[0].addedNodes[0].classList[1] == "im-important-box") {
+        for (var el of muts[0].addedNodes[0].getElementsByClassName("im-mess--text wall_module"))
+          bttvForVKNS.replaceEmotes(el);
+      }
+    } catch (e) {}
+  });
+
+  bttvForVKNS.boxLayerObserver.observe(document.getElementById("box_layer"), {
+    subtree: true,
+    attributes: false,
+    childList: true
+  });
+
+  bttvForVKNS.imObserver = new (window.MutationObserver || window.WebKitMutationObserver)(function(muts, o) {
+    try {
+      if (muts[0].target.id == "wrap3" && muts[0].addedNodes[0].id == "wrap2" && muts[0].addedNodes[0].firstElementChild.firstElementChild.firstElementChild.classList[0] == "im-page-wrapper") {
+        bttvForVKNS.visualizeEmotesOnPage();
+        return;
+      }
+    } catch (e) {}
+    try {
+      if (muts[1].target.id == "im_dialogs" && muts[1].addedNodes[0].classList[0] == "nim-dialog") {
+        var el;
+        for (var m of muts) {
+          if (m.addedNodes.length > 0) {
+            el = m.addedNodes[0].lastElementChild.firstElementChild.children[5].firstElementChild;
+            if (el.lastElementChild !== null && el.lastElementChild.className == "nim-dialog--inner-text")
+              bttvForVKNS.replaceEmotes(el.lastElementChild);
+            else
+              bttvForVKNS.replaceEmotes(el);
+          }
+        }
+        return;
+      }
+    } catch (e) {}
+    try {
+      if (muts[0].target.classList[1] == "im-chat-input--fwd" && muts[0].addedNodes[1].classList[1] == "im-fwd_msg") {
+        bttvForVKNS.replaceEmotes(muts[0].addedNodes[1].lastElementChild);
+        return;
+      }
+    } catch (e) {}
+    try {
+      if (muts[0].target.className.substr(0,13) == "_im_msg_reply") {
+        var container = muts[0].addedNodes[0].lastElementChild.lastElementChild;
+        var child = container.childNodes[0];
+        if (child.nodeName === "#text") {
+          for (var n of bttvForVKNS.parseEmotes(child.nodeValue)[1])
+            container.insertBefore(n, child);
+          child.remove();
+        }
+        return;
+      }
+    } catch (e) {}
+    try {
+      if (muts[0].target.className.substr(0,13) == "_im_msg_media") {
+        for (var el of muts[0].target.getElementsByClassName("im-mess--text wall_module"))
+          bttvForVKNS.replaceEmotes(el);
+        return;
+      }
+    } catch (e) {}
+  });
+
+  bttvForVKNS.imObserver.observe(document.getElementById("page_body"), {
+    subtree: true,
+    attributes: false,
+    childList: true
+  });
+
+  window.addEventListener("mouseup", function(e) {
+    e.preventDefault();
+    bttvForVKNS.scrollbar.style.webkitTransition = ".2s";
+    bttvForVKNS.scrollbar.style.transition = ".2s";
+    bttvForVKNS.menuDraggingBar = false;
+  });
+  window.addEventListener("mousemove", function(e) {
+    if (bttvForVKNS.menuDraggingBar) {
+      bttvForVKNS.handleScrollBar(bttvForVKNS.menuScrollOffset+e.pageY-bttvForVKNS.menuStartDraggingPoint, true);
+      bttvForVKNS.menuStartDraggingPoint = e.pageY;
+    }
+  });
+
+
+
+
+
+  return;
+  // settings updated
+  if (e.detail.updated === "predictedMenu") {
+    if (bttvForVKNS.settings.predictedMenu)
+      bttvForVKNS.appendPredictedMenu();
+    else
+      document.getElementsByClassName("im-page--chat-input")[0].removeChild(bttvForVKNS.predictedMenu);
+  } else if (e.detail.updated === "emoteMenu") {
+    if (bttvForVKNS.settings.emoteMenu)
+      bttvForVKNS.appendEmoteMenu();
+    else {
+      document.getElementsByClassName("im_chat-input--buttons")[0].removeChild(bttvForVKNS.emoteButtonWrapper);
+      bttvForVKNS.emotesMenu.style.display = "none";
+      bttvForVKNS.emoteButtonImage.style.webkitFilter = "grayscale(100%)";
+      bttvForVKNS.emoteButtonImage.style.filter = "grayscale(100%)";
+      bttvForVKNS.emotesMenuShown = false;
+    }
+  } else if (e.detail.updated === "showGifs")
+    bttvForVKNS.fillEmotesMenu();
 });
 
 window.addEventListener("click", function(e) {
