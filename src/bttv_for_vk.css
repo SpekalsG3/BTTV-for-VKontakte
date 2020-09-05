@@ -8,6 +8,9 @@
   margin: 0 2px;
   vertical-align: baseline;
 }
+.bttv_img-wrapper:hover .bttv_emote-tooltip {
+  display: block;
+}
 
 .bttv_img-emote {
   vertical-align: middle;
@@ -24,6 +27,7 @@
 }
 
 .bttv_emote-tooltip {
+  pointer-events: none;
   position: absolute;
   z-index: 2000;
   text-align: center;

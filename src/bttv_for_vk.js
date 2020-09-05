@@ -37,15 +37,6 @@ bttvForVKNS.toImg = function(name) {
       "innerHTML": name + "<br>Author: " + emote.author + "<br>" + (emote.frankerfacez ? "FrankerFaceZ Emotes" : "BTTV Emotes")
     })
   ]);
-
-  imgWrapper.addEventListener("mouseover", function() {
-    if (this.lastElementChild.className == "bttv_emote-tooltip")
-      this.lastElementChild.style.display = "block";
-  });
-  imgWrapper.addEventListener("mouseout", function() {
-    if (this.lastElementChild.className == "bttv_emote-tooltip")
-      this.lastElementChild.style.display = "none";
-  });
   return imgWrapper;
 }
 bttvForVKNS.parseEmotes = function(text) {
@@ -859,6 +850,7 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
 
   bttvForVKNS.imObserver = new (window.MutationObserver || window.WebKitMutationObserver)(function(muts, o) {
     try {
+      // Opened messages tab
       if (muts[0].target.id == "wrap3" && muts[0].addedNodes[0].id == "wrap2" && muts[0].addedNodes[0].firstElementChild.firstElementChild.firstElementChild.classList[0] == "im-page-wrapper") {
         bttvForVKNS.visualizeEmotesOnPage();
         return;
