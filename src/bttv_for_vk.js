@@ -701,6 +701,7 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
     tab.addEventListener("click", bttvForVKNS.handleTabClick);
 
   popupCloseBtn.addEventListener("click", function() {
+    bttvForVKNS.popup.style.visibility = "hidden";
     bttvForVKNS.popup.style.height = "0";
   });
 
@@ -728,6 +729,7 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
     innerHTML: "BTTV Settings"
   });
   settingsBtn.addEventListener("click", function() {
+    bttvForVKNS.popup.style.visibility = "visible";
     bttvForVKNS.popup.style.height = "472px";
   });
   vkMenu.insertBefore(settingsBtn, vkMenu.lastElementChild);
@@ -916,30 +918,6 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
       bttvForVKNS.menuStartDraggingPoint = e.pageY;
     }
   });
-
-
-
-
-
-  return;
-  // settings updated
-  if (e.detail.updated === "predictedMenu") {
-    if (bttvForVKNS.settings.predictedMenu)
-      bttvForVKNS.appendPredictedMenu();
-    else
-      document.getElementsByClassName("im-page--chat-input")[0].removeChild(bttvForVKNS.predictedMenu);
-  } else if (e.detail.updated === "emoteMenu") {
-    if (bttvForVKNS.settings.emoteMenu)
-      bttvForVKNS.appendEmoteMenu();
-    else {
-      document.getElementsByClassName("im_chat-input--buttons")[0].removeChild(bttvForVKNS.emoteButtonWrapper);
-      bttvForVKNS.emotesMenu.style.display = "none";
-      bttvForVKNS.emoteButtonImage.style.webkitFilter = "grayscale(100%)";
-      bttvForVKNS.emoteButtonImage.style.filter = "grayscale(100%)";
-      bttvForVKNS.emotesMenuShown = false;
-    }
-  } else if (e.detail.updated === "showGifs")
-    bttvForVKNS.fillEmotesMenu();
 });
 
 window.addEventListener("click", function(e) {

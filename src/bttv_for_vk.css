@@ -256,13 +256,13 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  /*width: 650px; margin-left: -325px;*/
   height: 0;
   margin-top: -236px;
   background: #1e1e1e;
   font-family: Helvetica,Arial,sans-serif;
   transition: .2s;
   z-index: 5000;
+  visibility: hidden;
   overflow: hidden;
 }
 .bttv_popup a {
