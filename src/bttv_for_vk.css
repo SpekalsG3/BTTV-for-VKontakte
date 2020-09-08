@@ -252,6 +252,10 @@
   margin-top: -18px !important;
 }
 
+.bttv_popup-link {
+  cursor: pointer;
+}
+
 .bttv_popup {
   position: fixed;
   top: 50%;

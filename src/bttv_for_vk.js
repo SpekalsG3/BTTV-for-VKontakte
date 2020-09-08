@@ -725,7 +725,7 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
 
   var vkMenu = document.getElementById("top_profile_menu");
   var settingsBtn = bttvForVKNS.createElement("div", {
-    className: "top_profile_mrow",
+    className: "top_profile_mrow bttv_popup-link",
     innerHTML: "BTTV Settings"
   });
   settingsBtn.addEventListener("click", function() {
