@@ -5,7 +5,7 @@
 2) Go to [VKontakte message tab](https://vk.com/im);
 3) Start typing emotes names.
 
-You can change settings in the popup shown bellow:
+You can change settings in the popup here:
 ![Popup with profile icon on the top right](https://cdn.discordapp.com/attachments/731279467263295568/752883313638637648/popup_link.png)
 
 ## Description
