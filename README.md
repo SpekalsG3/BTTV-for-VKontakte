@@ -5,6 +5,9 @@
 2) Go to [VKontakte message tab](https://vk.com/im);
 3) Start typing emotes names.
 
+You can change settings in the popup shown bellow:
+![Popup with profile icon on the top right](https://cdn.discordapp.com/attachments/731279467263295568/752883313638637648/popup_link.png)
+
 ## Description
 Now this addon just displays emotes in message tab on VKontakte website with appropriate settings. Hope for more in the future.
 
