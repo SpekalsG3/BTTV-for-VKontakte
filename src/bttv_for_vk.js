@@ -211,9 +211,10 @@ bttvForVKNS.insertInEditable = function(name, replace = false) {
     bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeValue = name + " ";
   } else {
     if (bttvForVKNS.twoLayers)
-      bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].nodeValue = currentNodeText.substr(0,bttvForVKNS.wordStart+1) + spaceBefore + name + " " + currentNodeText.substr(bttvForVKNS.cursorIndex);
+      // bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].nodeValue = currentNodeText.substr(0,bttvForVKNS.wordStart) + spaceBefore + name + " " + currentNodeText.substr(bttvForVKNS.cursorIndex);
+    bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].childNodes[bttvForVKNS.activeXNode].nodeValue = name + " ";
     else
-      bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeValue = currentNodeText.substr(0,bttvForVKNS.wordStart+1) + spaceBefore + name + " " + currentNodeText.substr(bttvForVKNS.cursorIndex);
+      bttvForVKNS.input.childNodes[bttvForVKNS.activeYNode].nodeValue = currentNodeText.substr(0,bttvForVKNS.wordStart) + spaceBefore + name + " " + currentNodeText.substr(bttvForVKNS.cursorIndex);
   }
   bttvForVKNS.cursorIndex = bttvForVKNS.wordStart + name.length + 1 + (spaceBefore == " ");
   bttvForVKNS.input.focus();
@@ -752,6 +753,11 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
             bttvForVKNS.replaceEmotes(msgBody.lastElementChild);
           else
             bttvForVKNS.replaceEmotes(msgBody);
+        }
+        if (bttvForVKNS.updateCursorPlacement()) {
+          bttvForVKNS.cursorIndex = 0;
+          bttvForVKNS.activeXNode = 0;
+          bttvForVKNS.activeYNode = 0;
         }
       }
     } catch (e) {}
