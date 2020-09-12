@@ -662,8 +662,6 @@ window.addEventListener("bttvForVKSettingsChange", function(e) {
       else {
         document.getElementsByClassName("im_chat-input--buttons")[0].removeChild(bttvForVKNS.emoteButtonWrapper);
         bttvForVKNS.emotesMenu.style.display = "none";
-        // bttvForVKNS.emoteButtonImage.style.webkitFilter = "grayscale(100%)";
-        // bttvForVKNS.emoteButtonImage.style.filter = "grayscale(100%)";
         bttvForVKNS.emotesMenuShown = false;
       }
     } else if (key === "showGifs")
