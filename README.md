@@ -1,7 +1,7 @@
 # BetterTTV for VKontakte
 
 ## How To
-1) Go to Google Store and install ["BetterTTV for VKontakte"](https://chrome.google.com/webstore/detail/bttv-for-vkontakte/pjabggjeimjeondcepjnpiokdffbekfh);
+1) Go to Google Store and install ["BetterTTV for VKontakte"](https://chrome.google.com/webstore/detail/bttv-for-vkontakte/diolfedcfphcenkbecgclombncblfnom);
 2) Go to [VKontakte message tab](https://vk.com/im);
 3) Start typing emotes names.
 
