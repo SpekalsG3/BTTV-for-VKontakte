@@ -1,7 +1,7 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "default_locale": "en",
   "description": "__MSG_extDesc__",
   "icons": {
@@ -10,8 +10,7 @@
     "512": "icons/512px.png"
   },
   "background": {
-    "scripts": ["src/common.js"],
-    "persistent": false
+    "service_worker": "src/common.js"
   },
   "content_scripts": [{
     "matches": ["*://vk.com/*"],
@@ -21,9 +20,15 @@
   "permissions": [
     "storage"
   ],
-  "web_accessible_resources": [
-    "src/bttv_for_vk.js",
-    "icons/mascot.png",
-    "icons/settings_logo.png"
+  "web_accessible_resources": [{
+    "resources": [
+      "src/bttv_for_vk.js",
+      "icons/mascot.png",
+      "icons/settings_logo.png"
+    ],
+    "matches": ["*://vk.com/*"]
+  }],
+  "host_permissions": [
+    "*://vk.com/*"
   ]
 }

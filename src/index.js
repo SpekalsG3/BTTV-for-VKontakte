@@ -44,8 +44,9 @@ if (document.readyState !== 'complete') {
       }));
     });
   });
-} else
+} else {
   console.error("Window is already loaded. Couldn't handle window.onload event.");
+}
 
 window.addEventListener("bttvForVKSettingsChange", function(e) {
   chrome.storage.sync.set({
